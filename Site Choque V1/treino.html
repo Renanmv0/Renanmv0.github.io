@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nossos Treinos - Choque Lacrosse</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=Racing+Sans+One&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        'title': ['Racing Sans One', 'sans-serif'],
+                    },
+                    colors: {
+                        'choque-blue': '#0A2463',
+                        'choque-gold': '#FFD700',
+                        'light-gray': '#F0F2F5',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-light-gray font-sans text-gray-800">
+
+    <header class="bg-choque-blue text-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="index.html" class="text-3xl font-bold text-choque-gold tracking-wider flex items-center gap-4">
+                <img src="Imagens/Adobe Express - file.png" alt="Logo Choque Lacrosse" class="h-16 w-auto">
+                <span class="font-title">CHOQUE LAX</span>
+            </a>
+            <nav>
+                <a href="index.html#galeria" class="bg-choque-gold text-choque-blue font-bold py-2 px-4 rounded-lg hover:bg-yellow-400 transition-transform duration-300 hover:scale-105">Voltar</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="bg-choque-blue text-white py-20" style="background-image: linear-gradient(rgba(10, 36, 99, 0.8), rgba(10, 36, 99, 0.8)), url('Imagens/Foto treino.jpeg'); background-size: cover; background-position: center;">
+            <div class="container mx-auto px-6 text-center">
+                <h1 class="font-title text-5xl md:text-6xl font-black uppercase mb-4">Venha Treinar Conosco!</h1>
+                <p class="text-xl max-w-2xl mx-auto">Nossos treinos são abertos para todos os níveis. A hora de aprender é agora!</p>
+            </div>
+        </section>
+
+        <section class="py-16 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                    <div class="bg-light-gray p-8 rounded-lg shadow-lg">
+                        <h3 class="text-2xl font-bold text-choque-blue mb-3">ONDE?</h3>
+                        <p class="text-lg">Centro Esportivo Tiête, no gramado!</p>
+                    </div>
+                    <div class="bg-light-gray p-8 rounded-lg shadow-lg">
+                        <h3 class="text-2xl font-bold text-choque-blue mb-3">QUANDO?</h3>
+                        <p class="text-lg">Todos os sábados ou domingos, das 9h às 12h ou 15h às 18h. Chegue um pouco antes para aquecer!</p>
+                    </div>
+                    <div class="bg-light-gray p-8 rounded-lg shadow-lg">
+                        <h3 class="text-2xl font-bold text-choque-blue mb-3">O QUE LEVAR?</h3>
+                        <p class="text-lg">Roupas de esporte, chuteiras e muita energia! Nós emprestamos o equipamento para iniciantes!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-16">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-choque-blue mb-2">Como é um Treino Típico?</h2>
+                    <div class="w-24 h-1 bg-choque-gold mx-auto mt-4"></div>
+                </div>
+                <div class="max-w-3xl mx-auto space-y-8">
+                    <p class="text-lg text-center">Nossos treinos são divididos em três partes para maximizar o aprendizado e a diversão:</p>
+                    <div class="flex items-start gap-4">
+                        <div class="bg-choque-gold text-choque-blue font-bold rounded-full h-10 w-10 flex items-center justify-center flex-shrink-0">1</div>
+                        <div>
+                            <h4 class="font-bold text-xl">Aquecimento e Fundamentos</h4>
+                            <p>Começamos com um aquecimento completo, seguido por exercícios básicos de passe, recepção e movimentação para aprimorar a técnica de todos.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4">
+                        <div class="bg-choque-gold text-choque-blue font-bold rounded-full h-10 w-10 flex items-center justify-center flex-shrink-0">2</div>
+                        <div>
+                            <h4 class="font-bold text-xl">Exercícios Táticos</h4>
+                            <p>Praticamos jogadas de ataque e defesa, estratégias de jogo e situações reais para desenvolver o entrosamento do time.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4">
+                        <div class="bg-choque-gold text-choque-blue font-bold rounded-full h-10 w-10 flex items-center justify-center flex-shrink-0">3</div>
+                        <div>
+                            <h4 class="font-bold text-xl">Coletivo (Jogo-Treino)</h4>
+                            <p>Finalizamos com um jogo-treino para colocar tudo em prática. É a parte mais divertida e onde a adrenalina sobe!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+    
+    <footer class="bg-gray-900 text-white py-8">
+        <div class="container mx-auto px-6 text-center">
+            <p class="text-sm text-gray-400">&copy; <span id="year"></span> Choque Lacrosse. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+    <script> document.getElementById('year').textContent = new Date().getFullYear(); </script>
+</body>
+</html>

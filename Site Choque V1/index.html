@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choque Lacrosse - O Primeiro Time de Lacrosse do Brasil</title>
+    <meta name="description" content="Junte-se ao Choque Lacrosse, o primeiro time de lacrosse do Brasil. Aprenda sobre o esporte, veja nossas fotos e vídeos, e inscreva-se para fazer parte da nossa história.">
+    
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=Racing+Sans+One&display=swap" rel="stylesheet">
+
+    <!-- Configuração de Cores e Fontes do Tailwind -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        'title': ['Racing Sans One', 'sans-serif'],
+                    },
+                    colors: {
+                        'choque-blue': '#0A2463',
+                        'choque-gold': '#FFD700',
+                        'light-gray': '#F0F2F5',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Estilo para um efeito de sobreposição no hero */
+        .hero-overlay::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(10, 36, 99, 0.7);
+            z-index: 1;
+        }
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+    </style>
+</head>
+<body class="bg-light-gray font-sans text-gray-800">
+
+    <!-- ========= HEADER / NAVEGAÇÃO ========= -->
+    <header id="header" class="bg-choque-blue text-white shadow-md fixed w-full z-50 transition-all duration-300">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#" class="text-3xl font-bold text-choque-gold tracking-wider flex items-center gap-4">
+                <!-- Caminho da imagem corrigido com / -->
+                <img src="Imagens/Adobe Express - file.png" alt="Logo Choque Lacrosse" class="h-16 w-auto">
+                <span class="font-title">CHOQUE LAX</span>
+            </a>
+            <!-- Menu Desktop -->
+            <nav class="hidden md:flex space-x-8 items-center">
+                <a href="#sobre" class="hover:text-choque-gold transition-colors duration-300">Sobre Nós</a>
+                <a href="#esporte" class="hover:text-choque-gold transition-colors duration-300">O Esporte</a>
+                <a href="#galeria" class="hover:text-choque-gold transition-colors duration-300">Galeria</a>
+                <a href="#junte-se" class="bg-choque-gold text-choque-blue font-bold py-2 px-4 rounded-lg hover:bg-yellow-400 transition-transform duration-300 hover:scale-105">Junte-se a Nós</a>
+            </nav>
+            <!-- Botão Menu Mobile -->
+            <button id="mobile-menu-button" class="md:hidden text-white focus:outline-none">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+            </button>
+        </div>
+        <!-- Menu Mobile (oculto por padrão) -->
+        <div id="mobile-menu" class="hidden md:hidden bg-choque-blue/95 backdrop-blur-sm">
+            <a href="#sobre" class="block text-center py-3 px-6 text-white hover:bg-choque-gold hover:text-choque-blue transition-colors duration-300">Sobre Nós</a>
+            <a href="#esporte" class="block text-center py-3 px-6 text-white hover:bg-choque-gold hover:text-choque-blue transition-colors duration-300">O Esporte</a>
+            <a href="#galeria" class="block text-center py-3 px-6 text-white hover:bg-choque-gold hover:text-choque-blue transition-colors duration-300">Galeria</a>
+            <a href="#junte-se" class="block text-center py-4 px-6 text-white bg-choque-gold/90 font-bold hover:bg-yellow-400 transition-colors duration-300">Junte-se a Nós</a>
+        </div>
+    </header>
+
+    <main>
+        <!-- ========= HERO SECTION ========= -->
+        <section id="home" class="relative min-h-screen flex items-center justify-center text-white bg-cover bg-center hero-overlay" style="background-image: url('Imagens/Foto treino.jpeg');">
+            <div class="hero-content text-center px-4">
+                <img src="Imagens/Adobe Express - file.png" alt="Logo Choque Lacrosse" class="h-32 md:h-40 w-auto mx-auto mb-6">
+                <h1 class="font-title text-5xl md:text-7xl lg:text-8xl font-black uppercase mb-4 tracking-wide text-shadow">A Revolução do Lacrosse no Brasil</h1>
+                <p class="text-xl md:text-2xl max-w-3xl mx-auto mb-8 text-shadow-sm">Seja pioneiro. Faça parte do Choque Lacrosse, o primeiro e mais dedicado time do país. A história está sendo escrita.</p>
+                <a href="#junte-se" class="bg-choque-gold text-choque-blue font-bold py-3 px-8 text-lg rounded-lg hover:bg-yellow-400 transition-transform duration-300 hover:scale-105 inline-block">QUERO FAZER PARTE</a>
+            </div>
+        </section>
+
+        <!-- ========= SEÇÃO SOBRE NÓS ========= -->
+        <section id="sobre" class="py-20 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-choque-blue mb-2">Nossa História</h2>
+                    <p class="text-lg text-gray-600">Mais que um time, uma família pioneira.</p>
+                    <div class="w-24 h-1 bg-choque-gold mx-auto mt-4"></div>
+                </div>
+                <div class="flex flex-col md:flex-row items-center gap-12">
+                    <div class="md:w-1/2">
+                        <img src="Imagens/Foto Time.jpeg" alt="Time Choque Lacrosse reunido" class="rounded-lg shadow-xl w-full">
+                    </div>
+                    <div class="md:w-1/2 text-lg text-gray-700 space-y-4">
+                        <p>O Choque Lacrosse nasceu do sonho de um grupo de amigos apaixonados por esportes e movidos pelo desafio de introduzir uma nova modalidade no Brasil. Em [Ano de Fundação], demos os primeiros passos, com poucos equipamentos e muita vontade de aprender e ensinar.</p>
+                        <p>Hoje, somos orgulhosamente o primeiro time de lacrosse do país, promovendo o esporte, competindo e, acima de tudo, construindo uma comunidade forte e unida. Nossa missão é expandir o lacrosse em território nacional e mostrar a garra brasileira em campo.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========= SEÇÃO O ESPORTE ========= -->
+        <section id="esporte" class="py-20 bg-light-gray">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-choque-blue mb-2">O que é Lacrosse?</h2>
+                    <p class="text-lg text-gray-600">Velocidade, habilidade e adrenalina.</p>
+                    <div class="w-24 h-1 bg-choque-gold mx-auto mt-4"></div>
+                </div>
+                <div class="flex flex-col lg:flex-row items-center gap-12">
+                    <div class="lg:w-1/2 text-lg text-gray-700 space-y-4">
+                        <p>Considerado o esporte que mais cresce na América do Norte, o lacrosse é um jogo de equipe dinâmico e emocionante. Utilizando um taco com uma rede na ponta (o "crosse"), os jogadores tentam marcar gols arremessando uma bola de borracha no gol adversário.</p>
+                        <p>Combina a velocidade do futebol e do basquete com a agilidade e a estratégia do hóquei. É um esporte que exige preparo físico, coordenação e, principalmente, muito trabalho em equipe. Perfeito para quem busca um desafio completo!</p>
+                    </div>
+                    <div class="lg:w-1/2 w-full">
+                        <div class="aspect-w-16 aspect-h-9 rounded-lg shadow-xl overflow-hidden">
+                            <!-- Substitua pelo link do seu vídeo do YouTube -->
+                                                        <iframe src="<iframe width="560" height="315" src="https://www.youtube.com/embed/bw8KCj1uzNA?si=5hHMk-58BYPAMBMF" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="w-full h-full"></iframe>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========= SEÇÃO GALERIA ========= -->
+      <section id="galeria" class="py-20 bg-white">
+    <div class="container mx-auto px-6">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold text-choque-blue mb-2">Nossos Melhores Momentos</h2>
+            <p class="text-lg text-gray-600">Explore nossa jornada em detalhes.</p>
+            <div class="w-24 h-1 bg-choque-gold mx-auto mt-4"></div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            
+            <a href="treino.html" class="group relative block overflow-hidden rounded-lg shadow-lg">
+                <img src="https://placehold.co/600x400/0A2463/FFFFFF?text=Treinos" alt="Link para a página de treinos" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110">
+                <div class="absolute inset-0 bg-black/40 transition-colors duration-300 group-hover:bg-black/60"></div>
+            </a>
+
+            <a href="fotos.html" class="group relative block overflow-hidden rounded-lg shadow-lg">
+                <img src="https://placehold.co/600x400/0A2463/FFFFFF?text=Time" alt="Link para a página de fotos do time" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                <div class="absolute inset-0 bg-black/40 transition-colors duration-300 group-hover:bg-black/60"></div>
+            </a>
+
+            <a href="equipamentos.html" class="group relative block overflow-hidden rounded-lg shadow-lg">
+                <img src="https://placehold.co/600x400/0A2463/FFFFFF?text=Equipamentos" alt="Link para a página de equipamentos" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                <div class="absolute inset-0 bg-black/40 transition-colors duration-300 group-hover:bg-black/60"></div>
+            </a>
+
+        </div>
+    </div>
+</section>
+        
+        <!-- ========= SEÇÃO JUNTE-SE A NÓS (FORMULÁRIO) ========= -->
+        <section id="junte-se" class="py-20 bg-choque-blue text-white">
+            <div class="container mx-auto px-6">
+                 <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-2">Junte-se ao Choque!</h2>
+                    <p class="text-lg text-gray-300">Preencha o formulário e entraremos em contato para o próximo treino.</p>
+                    <div class="w-24 h-1 bg-choque-gold mx-auto mt-4"></div>
+                </div>
+                <div class="max-w-2xl mx-auto bg-white/10 p-8 rounded-lg shadow-2xl backdrop-blur-sm">
+                    <!-- IMPORTANTE: Para o formulário funcionar, substitua a URL no 'action' por uma de um serviço como Formspree.io ou Netlify Forms -->
+                    <form action="https://formspree.io/f/YOUR_UNIQUE_ID" method="POST">
+                        <div class="mb-5">
+                            <label for="name" class="block mb-2 text-sm font-medium text-gray-200">Nome Completo</label>
+                            <input type="text" id="name" name="name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-choque-gold focus:border-choque-gold block w-full p-2.5" placeholder="Seu nome" required>
+                        </div>
+                        <div class="mb-5">
+                            <label for="email" class="block mb-2 text-sm font-medium text-gray-200">Email</label>
+                            <input type="email" id="email" name="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-choque-gold focus:border-choque-gold block w-full p-2.5" placeholder="seu.email@exemplo.com" required>
+                        </div>
+                        <div class="mb-5">
+                            <label for="message" class="block mb-2 text-sm font-medium text-gray-200">Sua mensagem (opcional)</label>
+                            <textarea id="message" name="message" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-choque-gold focus:border-choque-gold" placeholder="Fale um pouco sobre você, se já praticou algum esporte, etc."></textarea>
+                        </div>
+                        <button type="submit" class="text-choque-blue bg-choque-gold hover:bg-yellow-400 focus:ring-4 focus:outline-none focus:ring-yellow-300 font-bold rounded-lg text-base w-full sm:w-auto px-8 py-3 text-center transition-transform duration-300 hover:scale-105">Enviar Inscrição</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ========= FOOTER ========= -->
+    <footer class="bg-gray-900 text-white py-8">
+        <div class="container mx-auto px-6 text-center">
+            <p class="font-bold text-lg mb-2">CHOQUE LACROSSE</p>
+            <p class="mb-4">Seguindo escrevendo a história do lacrosse no Brasil.</p>
+            <!-- Adicione aqui os links das suas redes sociais -->
+            <div class="flex justify-center space-x-6 mb-4">
+                <a href="#" class="hover:text-choque-gold transition-colors"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd" /></svg></a>
+                <a href="#" class="hover:text-choque-gold transition-colors"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.85s-.011 3.585-.069 4.85c-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07s-3.585-.012-4.85-.07c-3.252-.148-4.771-1.691-4.919-4.919-.058-1.265-.069-1.645-.069-4.85s.011-3.585.069-4.85c.149-3.225 1.664-4.771 4.919 4.919 1.266.057 1.644.069 4.85.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4-358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948s.014 3.667.072 4.947c.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072s3.667-.014 4.947-.072c4.358-.2 6.78-2.618 6.98-6.98.059-1.281.073-1.689.073-4.948s-.014-3.667-.072-4.947c-.2-4.358-2.618-6.78-6.98-6.98C15.667.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100-2.88 1.44 1.44 0 000 2.88z"/></svg></a>
+            </div>
+            <p class="text-sm text-gray-400">&copy; <span id="year"></span> Choque Lacrosse. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Script para o menu mobile
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Fechar menu mobile ao clicar em um link
+        const mobileLinks = mobileMenu.querySelectorAll('a');
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // Atualiza o ano no footer
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Efeito de sombra no header ao rolar a página
+        const header = document.getElementById('header');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                header.classList.add('bg-choque-blue/90', 'backdrop-blur-sm');
+            } else {
+                header.classList.remove('bg-choque-blue/90', 'backdrop-blur-sm');
+            }
+        });
+    </script>
+</body>
+</html>
+
