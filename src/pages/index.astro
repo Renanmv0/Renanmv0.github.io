@@ -1,0 +1,36 @@
+---
+// Página única do site. A ordem das seções segue a jornada de quem chega:
+// conhecer o esporte -> conhecer o time -> saber como entrar -> detalhes.
+import Base from '../layouts/Base.astro';
+import Topo from '../components/Topo.astro';
+import Hero from '../components/Hero.astro';
+import Lacrosse from '../components/Lacrosse.astro';
+import Sobre from '../components/Sobre.astro';
+import ComoEntrar from '../components/ComoEntrar.astro';
+import Agenda from '../components/Agenda.astro';
+import Elenco from '../components/Elenco.astro';
+import Resultados from '../components/Resultados.astro';
+import Galeria from '../components/Galeria.astro';
+import Apoie from '../components/Apoie.astro';
+import Rodape from '../components/Rodape.astro';
+---
+
+<Base>
+  <Topo />
+  <main id="conteudo">
+    <Hero />
+    <Lacrosse />
+    <Sobre />
+    <ComoEntrar />
+    <Agenda />
+    <Elenco />
+    <Resultados />
+    <Galeria />
+    <Apoie />
+  </main>
+  <Rodape />
+</Base>
+
+<script>
+  import '../scripts/animacoes';
+</script>

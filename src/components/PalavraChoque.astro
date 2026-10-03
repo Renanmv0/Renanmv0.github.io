@@ -1,0 +1,37 @@
+---
+// O nome CHOQUE com a "perna" do Q em forma de raio: a assinatura visual do time.
+// Usado no "Isso é o Choque" e no rodapé (o topo da página tem a versão animada).
+// As cores vêm de variáveis CSS do elemento pai:
+//   --cor-texto (letras), --cor-raio (raio) e --cor-contorno (borda do raio).
+---
+
+<span class="palavra-choque" translate="no">CHO<span class="palavra-choque__q">Q<svg
+      class="palavra-choque__raio"
+      viewBox="0 0 60 100"
+      aria-hidden="true"
+      focusable="false"><polygon points="36 0 4 54 28 54 14 100 58 38 34 38 48 0"></polygon></svg></span>UE</span>
+
+<style>
+  .palavra-choque {
+    color: var(--cor-texto, var(--amarelo));
+    white-space: nowrap;
+  }
+  .palavra-choque__q {
+    position: relative;
+    display: inline-block;
+  }
+  .palavra-choque__raio {
+    position: absolute;
+    left: 47%;
+    top: 63%;
+    width: 0.3em;
+    height: 0.5em;
+    overflow: visible;
+    fill: var(--cor-raio, var(--amarelo));
+    stroke: var(--cor-contorno, var(--noite));
+    stroke-width: 7px;
+    stroke-linejoin: round;
+    paint-order: stroke;
+    transform: rotate(-8deg);
+  }
+</style>

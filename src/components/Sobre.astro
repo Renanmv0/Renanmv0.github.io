@@ -1,0 +1,267 @@
+---
+// "Isso é o Choque": história, valores e números do time.
+// Textos e números vêm de src/data/time.json.
+import { Picture } from 'astro:assets';
+import fotoTreino from '../assets/fotos/treino.jpg';
+import Corte from './Corte.astro';
+import Ph from './Ph.astro';
+import PalavraChoque from './PalavraChoque.astro';
+import { time, anosDeTime } from '../lib/dados';
+
+const anos = anosDeTime();
+const contadores = [
+  { valor: anos, rotulo: anos === 1 ? 'ano de Choque' : 'anos de Choque', confirmado: time.fundacao.confirmado, fundacao: time.fundacao.ano },
+  ...time.numeros.map((n) => ({ ...n, fundacao: undefined })),
+];
+
+// Pictogramas das placas de advertência, na ordem dos valores
+const pictogramas = ['velocidade', 'impacto', 'corrente'];
+---
+
+<section class="secao secao--amarelo sobre" id="choque" aria-labelledby="choque-titulo">
+  <Corte posicao="topo" cor="var(--amarelo)" forma={2} />
+  <p class="sobre__fundo" aria-hidden="true" data-deslizar="-30">Velocidade Impacto Corrente Velocidade</p>
+
+  <div class="container sobre__grade">
+    <div class="sobre__texto">
+      <h2 class="titulo-secao sobre__titulo" id="choque-titulo">
+        <span class="sr-only">Isso é o Choque</span>
+        <span class="linha sobre__isso" aria-hidden="true">Isso é o</span>
+        <span class="linha sobre__marca" aria-hidden="true" data-carimbo><PalavraChoque /></span>
+      </h2>
+      {
+        time.historia.map((paragrafo, i) => (
+          <p class:list={['sobre__paragrafo', { abre: i === 0 }]} data-surge>
+            <Ph texto={paragrafo} />
+          </p>
+        ))
+      }
+    </div>
+
+    <figure class="sobre__foto" data-revela>
+      <span class="varredura varredura--noite" aria-hidden="true"></span>
+      <div class="sobre__moldura">
+        <Picture
+          src={fotoTreino}
+          formats={['avif', 'webp']}
+          widths={[400, 640, 900, 1200]}
+          sizes="(min-width: 1024px) 40vw, 92vw"
+          alt="Atletas do Choque em um coletivo de treino no gramado, disputando a bola com tacos e capacetes"
+        />
+      </div>
+      <figcaption>Coletivo de treino</figcaption>
+    </figure>
+  </div>
+
+  <div class="container">
+    <ul class="valores" role="list">
+      {
+        time.valores.map((valor, i) => (
+          <li class="valor" data-surge>
+            <svg class="valor__placa" viewBox="0 0 100 92" aria-hidden="true" focusable="false">
+              <path class="valor__triangulo" d="M50 6 94 86H6Z" />
+              {pictogramas[i % 3] === 'velocidade' && <path class="valor__picto" d="M36 52l11 11-11 11M51 52l11 11-11 11" />}
+              {pictogramas[i % 3] === 'impacto' && (
+                <path class="valor__picto valor__picto--cheio" d="M50 44l4 11 11-4-6 10 9 7-12 1 1 12-7-9-7 9 1-12-12-1 9-7-6-10 11 4z" />
+              )}
+              {pictogramas[i % 3] === 'corrente' && <path class="valor__picto valor__picto--cheio" d="M53 42 38 66h11l-4 16 17-26H51l6-14z" />}
+            </svg>
+            <h3 class="valor__titulo">{valor.titulo}</h3>
+            <p class="valor__texto">
+              <Ph texto={valor.texto} />
+            </p>
+          </li>
+        ))
+      }
+    </ul>
+
+    <dl class="numeros">
+      {
+        contadores.map((n) => (
+          <div class="numero">
+            <dt class="numero__rotulo">
+              {n.rotulo}
+              {!n.confirmado && <span class="selo-confirmar">[confirmar]</span>}
+            </dt>
+            <dd class="numero__valor tabular">
+              <span aria-hidden="true" data-contador={n.valor} data-fundacao={n.fundacao}>
+                {n.valor}
+              </span>
+              <span class="sr-only">{n.valor}</span>
+            </dd>
+          </div>
+        ))
+      }
+    </dl>
+  </div>
+</section>
+
+<style>
+  .sobre {
+    overflow-x: clip;
+    padding-bottom: calc(var(--secao) + var(--corte) * 0.5);
+  }
+
+  /* Palavras gigantes em contorno que deslizam ao fundo */
+  .sobre__fundo {
+    position: absolute;
+    top: 8%;
+    left: 0;
+    z-index: -1;
+    max-width: none;
+    white-space: nowrap;
+    font-family: var(--t-titulo);
+    font-weight: 900;
+    font-size: clamp(9rem, 34vw, 26rem);
+    line-height: 0.8;
+    text-transform: uppercase;
+    color: transparent;
+    -webkit-text-stroke: 2px rgb(11 14 26 / 0.12);
+    pointer-events: none;
+    user-select: none;
+  }
+
+  /* Título: a assinatura do time, em marinho sobre o amarelo */
+  .sobre__titulo {
+    --cor-texto: var(--noite);
+    --cor-raio: var(--noite);
+    --cor-contorno: var(--amarelo);
+  }
+  .sobre__isso {
+    font-size: 0.42em;
+    margin-bottom: 0.08em;
+  }
+  .sobre__marca {
+    font-size: 1.25em;
+    line-height: 0.82;
+    padding-bottom: 0.12em;
+  }
+  .sobre__grade {
+    display: grid;
+    gap: clamp(2.5rem, 6vw, 4rem);
+  }
+  .sobre__texto {
+    display: grid;
+    gap: 1.25rem;
+    align-content: start;
+  }
+  .sobre__paragrafo:not(.abre) {
+    max-width: 58ch;
+  }
+
+  .sobre__foto {
+    position: relative;
+    margin: 0;
+    transform: rotate(-2deg);
+  }
+  .sobre__moldura {
+    padding: 0.6rem;
+    background: var(--noite);
+    clip-path: polygon(0 0, calc(100% - 26px) 0, 100% 26px, 100% 100%, 26px 100%, 0 calc(100% - 26px));
+  }
+  .sobre__moldura :global(img) {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px));
+  }
+  .sobre__foto figcaption {
+    margin-top: 0.6rem;
+    font-size: var(--fs-pequeno);
+    font-weight: 600;
+  }
+
+  /* ---------- Valores como placas de advertência ---------- */
+  .valores {
+    display: grid;
+    gap: 2rem;
+    margin-top: clamp(3.5rem, 9vw, 6rem);
+    padding-top: clamp(2rem, 5vw, 3rem);
+    border-top: 3px solid var(--noite);
+  }
+  .valor {
+    display: grid;
+    grid-template-columns: 4.5rem 1fr;
+    column-gap: 1.25rem;
+    align-items: start;
+  }
+  .valor__placa {
+    grid-row: span 2;
+    width: 4.5rem;
+  }
+  .valor__triangulo {
+    fill: var(--noite);
+    stroke: var(--noite);
+    stroke-width: 8;
+    stroke-linejoin: round;
+  }
+  .valor__picto {
+    fill: none;
+    stroke: var(--amarelo);
+    stroke-width: 5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .valor__picto--cheio {
+    fill: var(--amarelo);
+    stroke-width: 2;
+  }
+  .valor__titulo {
+    font-size: var(--fs-h3);
+  }
+  .valor__texto {
+    margin-top: 0.4rem;
+  }
+
+  /* ---------- Contadores ---------- */
+  .numeros {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    margin-top: clamp(3.5rem, 9vw, 6rem);
+  }
+  .numero {
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    padding-top: 0.75rem;
+    border-top: 3px solid var(--noite);
+  }
+  .numero__valor {
+    font-family: var(--t-numero);
+    font-weight: 900;
+    font-size: clamp(4.5rem, 21vw, 11rem);
+    line-height: 0.82;
+    margin: 0;
+  }
+  .numero__rotulo {
+    font-weight: 700;
+    font-size: var(--fs-pequeno);
+    line-height: 1.3;
+  }
+
+  @media (min-width: 768px) {
+    .valores {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .valor {
+      grid-template-columns: 1fr;
+    }
+    .valor__placa {
+      grid-row: auto;
+      width: 5.5rem;
+      margin-bottom: 1rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .sobre__grade {
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+      align-items: center;
+    }
+    .sobre__foto {
+      margin-right: calc(var(--margem) * -0.5);
+    }
+  }
+</style>

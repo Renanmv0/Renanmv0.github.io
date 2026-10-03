@@ -1,0 +1,288 @@
+---
+// "O que é lacrosse?": explicação rápida para quem nunca viu o esporte,
+// no estilo prancheta de técnico. No computador, os cards correm na horizontal
+// enquanto a pessoa rola; no celular, viram um carrossel de arrastar.
+import Ilustracao from './Ilustracao.astro';
+import VideoLeve from './VideoLeve.astro';
+import Corte from './Corte.astro';
+import { time } from '../lib/dados';
+
+const pecas = [
+  {
+    arte: 'taco',
+    fato: 'até 1,8\u00a0m',
+    titulo: 'O taco',
+    texto:
+      'A rede na ponta serve para pegar, carregar e lançar a bola. Ataque e meio-campo usam o taco curto; na defesa, dá para usar o longo.',
+  },
+  {
+    arte: 'bola',
+    fato: '150+\u00a0km/h',
+    titulo: 'A bola',
+    texto:
+      'É de borracha maciça, um pouco menor que uma bola de tênis e bem mais pesada. No arremesso de quem joga há anos, passa dos 150\u00a0km/h.',
+  },
+  {
+    arte: 'gol',
+    fato: '1,83\u00a0×\u00a01,83\u00a0m',
+    titulo: 'O gol',
+    texto:
+      'Um quadrado defendido pelo goleiro. Em volta dele fica a área do gol, um círculo onde o ataque não pode pisar: tem que acertar de fora.',
+  },
+  {
+    arte: 'campo',
+    fato: '10 contra 10',
+    titulo: 'Os times',
+    largo: true,
+    texto:
+      'No campo masculino são 10 por time: goleiro (G), 3 na defesa (D), 3 no meio (M) e 3 no ataque (A). No feminino são 12. No sixes, formato que estreia nas Olimpíadas de Los Angeles\u00a02028, são 6.',
+  },
+  {
+    arte: 'capacete',
+    fato: 'a gente empresta',
+    titulo: 'A proteção',
+    texto:
+      'No masculino tem contato com o corpo e com o taco, por isso capacete, luvas e protetores. No feminino o contato é limitado e a proteção é mais leve, com óculos e protetor bucal.',
+  },
+] as const;
+---
+
+<section class="secao secao--prancheta lacrosse" id="lacrosse" aria-labelledby="lacrosse-titulo">
+  <Corte posicao="topo" cor="var(--noite-2)" />
+
+  <div class="lacrosse__palco" data-horizontal>
+    <div class="lacrosse__cabeca container">
+      <h2 class="titulo-secao" id="lacrosse-titulo" data-titulo>
+        <span class="linha contorno">O que é</span>
+        <span class="linha">lacrosse?</span>
+      </h2>
+      <p class="abre" data-surge>
+        Dois times, dois gols e uma bola de borracha maciça. Com um taco que tem uma rede na ponta, cada jogador pega,
+        carrega e arremessa a bola. Vence quem fizer mais gols.
+      </p>
+      <p class="lacrosse__mistura" data-surge>
+        Pense na velocidade do futebol, no contato do hóquei e no raciocínio do basquete, só que tudo correndo e com a bola
+        no ar.
+      </p>
+      <p class="lacrosse__dica" aria-hidden="true">
+        <span class="lacrosse__dica-toque">Arraste para o lado</span>
+        <span class="lacrosse__dica-rolar">Role para ver as peças</span>
+      </p>
+    </div>
+
+    <div class="lacrosse__janela" tabindex="0" role="region" aria-label="As peças do jogo, em cards lado a lado">
+      <ul class="lacrosse__trilho" role="list">
+        {
+          pecas.map((peca) => (
+            <li class:list={['peca', { 'peca--larga': 'largo' in peca && peca.largo }]} data-revela>
+              <span class="varredura" aria-hidden="true" />
+              <div class="peca__arte">
+                <Ilustracao nome={peca.arte} />
+              </div>
+              <p class="peca__fato tabular">{peca.fato}</p>
+              <h3 class="peca__titulo">{peca.titulo}</h3>
+              <p class="peca__texto">{peca.texto}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+
+  {
+    time.video.youtubeId && (
+      <div class="lacrosse__video container" data-revela>
+        <span class="varredura" aria-hidden="true" />
+        <VideoLeve id={time.video.youtubeId} titulo={time.video.titulo} />
+      </div>
+    )
+  }
+</section>
+
+<style>
+  .lacrosse {
+    padding-bottom: calc(var(--secao) + var(--corte));
+    overflow-x: clip;
+  }
+
+  .lacrosse__cabeca {
+    display: grid;
+    gap: 1.25rem;
+    margin-bottom: 2.5rem;
+  }
+  .lacrosse__mistura {
+    color: var(--nevoa);
+  }
+  .lacrosse__dica {
+    font-family: var(--t-titulo);
+    font-weight: 800;
+    font-size: 1rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--amarelo);
+  }
+  .lacrosse__dica-rolar {
+    display: none;
+  }
+  .lacrosse__dica::after {
+    content: '';
+    display: inline-block;
+    width: 2.5rem;
+    height: 2px;
+    margin-left: 0.6rem;
+    vertical-align: middle;
+    background: currentColor;
+  }
+
+  /* ---------- Carrossel (celular e tablet) ---------- */
+  .lacrosse__janela {
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--margem);
+    padding-inline: var(--margem);
+    padding-bottom: 1rem;
+    scrollbar-width: none;
+  }
+  .lacrosse__janela::-webkit-scrollbar {
+    display: none;
+  }
+  .lacrosse__janela:focus-visible {
+    outline-offset: -3px;
+  }
+  .lacrosse__trilho {
+    display: flex;
+    gap: 1rem;
+    width: max-content;
+    list-style: none;
+    padding: 0;
+  }
+
+  /* ---------- Card (peça do jogo) ---------- */
+  .peca {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: min(80vw, 21rem);
+    padding: 1.25rem 1.25rem 1.5rem;
+    background: rgb(11 14 26 / 0.72);
+    border: 1px solid rgb(241 242 246 / 0.14);
+    clip-path: polygon(0 0, calc(100% - 22px) 0, 100% 22px, 100% 100%, 0 100%);
+    scroll-snap-align: start;
+  }
+  .peca--larga {
+    width: min(88vw, 27rem);
+  }
+  .peca__arte {
+    display: grid;
+    place-items: center;
+    aspect-ratio: 6 / 5;
+    margin-bottom: 1rem;
+  }
+  .peca--larga .peca__arte {
+    aspect-ratio: 8 / 5;
+  }
+  .peca__arte :global(svg) {
+    width: 92%;
+  }
+  .peca__fato {
+    font-family: var(--t-titulo);
+    font-weight: 900;
+    font-size: clamp(2.2rem, 9vw, 2.9rem);
+    line-height: 1;
+    color: var(--amarelo);
+    text-transform: uppercase;
+  }
+  .peca__titulo {
+    margin-top: 0.4rem;
+    font-size: var(--fs-h3);
+  }
+  .peca__texto {
+    margin-top: 0.75rem;
+    font-size: var(--fs-pequeno);
+    line-height: 1.55;
+    color: rgb(241 242 246 / 0.86);
+  }
+
+  .lacrosse__video {
+    position: relative;
+    margin-top: clamp(3rem, 8vw, 5rem);
+    max-width: 60rem;
+  }
+
+  /* ---------- Computador ---------- */
+  @media (min-width: 1024px) {
+    .lacrosse__palco {
+      display: grid;
+      grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.6fr);
+      align-items: start;
+      gap: 3rem;
+      width: min(100% - 2 * var(--margem), var(--largura));
+      margin-inline: auto;
+    }
+    /* sem animação, o título acompanha a leitura dos cards */
+    .lacrosse__cabeca {
+      position: sticky;
+      top: 7rem;
+      width: auto;
+      margin: 0;
+    }
+    .lacrosse.is-horizontal .lacrosse__palco {
+      align-items: center;
+    }
+    .lacrosse.is-horizontal .lacrosse__cabeca {
+      position: static;
+    }
+    .lacrosse__cabeca .titulo-secao {
+      font-size: clamp(4.5rem, 7.2vw, 8rem);
+    }
+    .lacrosse__dica {
+      display: none;
+    }
+    /* sem animação: cards em grade */
+    .lacrosse__janela {
+      overflow: visible;
+      padding: 0;
+    }
+    .lacrosse__trilho {
+      flex-wrap: wrap;
+      width: auto;
+    }
+    .peca,
+    .peca--larga {
+      width: calc(50% - 0.5rem);
+    }
+    .peca--larga {
+      width: 100%;
+    }
+
+    /* com animação: trilho único que corre na horizontal (ver animacoes.ts) */
+    .lacrosse.is-horizontal .lacrosse__palco {
+      min-height: 100svh;
+      padding-block: 5rem 2rem;
+    }
+    .lacrosse.is-horizontal .lacrosse__janela {
+      overflow: visible;
+      clip-path: inset(-10% -100vw -10% 0);
+    }
+    .lacrosse.is-horizontal .lacrosse__trilho {
+      flex-wrap: nowrap;
+      width: max-content;
+    }
+    .lacrosse.is-horizontal .peca {
+      width: 22rem;
+    }
+    .lacrosse.is-horizontal .peca--larga {
+      width: 30rem;
+    }
+    .lacrosse.is-horizontal .lacrosse__dica {
+      display: block;
+    }
+    .lacrosse.is-horizontal .lacrosse__dica-toque {
+      display: none;
+    }
+    .lacrosse.is-horizontal .lacrosse__dica-rolar {
+      display: inline;
+    }
+  }
+</style>

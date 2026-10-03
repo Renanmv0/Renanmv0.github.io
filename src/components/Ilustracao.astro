@@ -1,0 +1,193 @@
+---
+// Ilustrações próprias no traço do escudo (linha amarela sobre a "prancheta").
+// Substituem as fotos de equipamento de terceiros do site antigo.
+// São decorativas: o texto ao lado explica cada peça.
+interface Props {
+  nome: 'taco' | 'bola' | 'gol' | 'campo' | 'capacete';
+}
+const { nome } = Astro.props;
+
+// Rede do taco: linhas diagonais recortadas pelo formato da cabeça
+const redeA = Array.from({ length: 12 }, (_, i) => -96 + i * 12);
+const redeB = Array.from({ length: 12 }, (_, i) => -36 + i * 12);
+
+// Jogadores no campo (time atacando para a direita)
+const jogadores: Array<[number, number, string]> = [
+  [51, 100, 'G'],
+  [80, 52, 'D'],
+  [90, 100, 'D'],
+  [80, 148, 'D'],
+  [160, 36, 'M'],
+  [148, 100, 'M'],
+  [160, 164, 'M'],
+  [238, 58, 'A'],
+  [292, 100, 'A'],
+  [238, 142, 'A'],
+];
+const viewBox = nome === 'campo' ? '0 0 320 200' : '0 0 240 220';
+---
+
+<svg class:list={['ilustra', `ilustra--${nome}`]} viewBox={viewBox} aria-hidden="true" focusable="false">
+  {
+    nome === 'taco' && (
+      <>
+        <defs>
+          <clipPath id="cabeca-taco">
+            <path d="M-4 0V-10C-14-22-22-40-22-60C-22-72-18-80-18-88C-18-96-26-100-26-108C-26-116-14-120 0-116C14-120 26-116 26-108C26-100 18-96 18-88C18-80 22-72 22-60C22-40 14-22 4-10V0Z" />
+          </clipPath>
+        </defs>
+        <g transform="translate(128 124) rotate(34)">
+          <g clip-path="url(#cabeca-taco)" class="giz">
+            {redeA.map((x) => <line x1={x} y1="-120" x2={x + 60} y2="0" />)}
+            {redeB.map((x) => <line x1={x} y1="-120" x2={x - 60} y2="0" />)}
+          </g>
+          <path class="traco" d="M-4 0V-10C-14-22-22-40-22-60C-22-72-18-80-18-88C-18-96-26-100-26-108C-26-116-14-120 0-116C14-120 26-116 26-108C26-100 18-96 18-88C18-80 22-72 22-60C22-40 14-22 4-10V0Z" />
+          <line class="giz giz--forte" x1="-24" y1="-102" x2="24" y2="-102" />
+          <line class="traco traco--grosso" x1="0" y1="2" x2="0" y2="112" />
+          <line class="traco" x1="-6" y1="112" x2="6" y2="112" />
+        </g>
+        <circle class="traco traco--cheio" cx="206" cy="40" r="9" />
+        <line class="giz giz--forte" x1="214" y1="56" x2="232" y2="70" />
+        <line class="giz giz--forte" x1="200" y1="58" x2="212" y2="80" />
+      </>
+    )
+  }
+  {
+    nome === 'bola' && (
+      <>
+        <circle class="giz giz--fantasma" cx="52" cy="112" r="22" />
+        <circle class="giz giz--fantasma2" cx="92" cy="112" r="30" />
+        <line class="traco" x1="22" y1="92" x2="104" y2="92" />
+        <line class="traco" x1="46" y1="112" x2="106" y2="112" />
+        <line class="traco" x1="30" y1="132" x2="104" y2="132" />
+        <circle class="traco traco--grosso" cx="152" cy="112" r="40" />
+        <path class="giz giz--forte" d="M128 96a28 28 0 0 1 22-14" />
+      </>
+    )
+  }
+  {
+    nome === 'gol' && (
+      <>
+        <ellipse class="giz giz--tracejado" cx="120" cy="178" rx="108" ry="26" />
+        <g class="giz">
+          {[84, 102, 120, 138, 156].map((x) => <line x1={x} y1="56" x2={x} y2="160" />)}
+          {[74, 92, 110, 128, 146].map((y) => <line x1="68" y1={y} x2="172" y2={y} />)}
+        </g>
+        <line class="traco" x1="66" y1="54" x2="120" y2="162" />
+        <line class="traco" x1="174" y1="54" x2="120" y2="162" />
+        <rect class="traco traco--grosso" x="66" y="54" width="108" height="108" />
+        <line class="giz giz--forte" x1="66" y1="34" x2="174" y2="34" />
+        <line class="giz giz--forte" x1="66" y1="28" x2="66" y2="40" />
+        <line class="giz giz--forte" x1="174" y1="28" x2="174" y2="40" />
+        <text class="ilustra__texto" x="120" y="22">1,83 m</text>
+        <line class="giz giz--forte" x1="194" y1="54" x2="194" y2="162" />
+        <line class="giz giz--forte" x1="188" y1="54" x2="200" y2="54" />
+        <line class="giz giz--forte" x1="188" y1="162" x2="200" y2="162" />
+        <text class="ilustra__texto" x="0" y="0" transform="translate(214 108) rotate(90)">1,83 m</text>
+      </>
+    )
+  }
+  {
+    nome === 'campo' && (
+      <>
+        <rect class="giz giz--forte" x="10" y="10" width="300" height="180" />
+        <line class="giz" x1="160" y1="10" x2="160" y2="190" />
+        <line class="giz giz--tracejado" x1="105" y1="10" x2="105" y2="190" />
+        <line class="giz giz--tracejado" x1="215" y1="10" x2="215" y2="190" />
+        <circle class="giz" cx="51" cy="100" r="13" />
+        <circle class="giz" cx="269" cy="100" r="13" />
+        <line class="traco" x1="44" y1="92" x2="44" y2="108" />
+        <line class="traco" x1="276" y1="92" x2="276" y2="108" />
+        <path class="giz" d="M155 95l10 10m0-10l-10 10" />
+        {jogadores.map(([x, y, letra]) => (
+          <g class="ilustra__jogador">
+            <circle cx={x} cy={y} r="11" />
+            <text x={x} y={y + 0.5}>{letra}</text>
+          </g>
+        ))}
+      </>
+    )
+  }
+  {
+    nome === 'capacete' && (
+      <>
+        <path class="traco traco--grosso" d="M62 112C62 58 92 30 120 30s58 28 58 82" />
+        <path class="traco" d="M74 101q46-15 92 0" />
+        <path class="giz giz--forte" d="M104 46l6 16M136 46l-6 16M120 40v18" />
+        <path class="traco" d="M62 112l6 34 16 14M178 112l-6 34-16 14" />
+        <path class="traco" d="M80 100v50q0 26 40 30 40-4 40-30v-50" />
+        <g class="giz giz--forte">
+          <line x1="96" y1="98" x2="96" y2="170" />
+          <line x1="112" y1="96" x2="112" y2="178" />
+          <line x1="128" y1="96" x2="128" y2="178" />
+          <line x1="144" y1="98" x2="144" y2="170" />
+          <line x1="80" y1="122" x2="160" y2="122" />
+          <line x1="80" y1="144" x2="160" y2="144" />
+          <line x1="88" y1="164" x2="152" y2="164" />
+        </g>
+        <path class="traco" d="M106 184q14 9 28 0" />
+      </>
+    )
+  }
+</svg>
+
+<style>
+  .ilustra {
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+  .ilustra :global(.traco) {
+    fill: none;
+    stroke: var(--amarelo);
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .ilustra :global(.traco--grosso) {
+    stroke-width: 5;
+  }
+  .ilustra :global(.traco--cheio) {
+    fill: var(--amarelo);
+  }
+  .ilustra :global(.giz) {
+    fill: none;
+    stroke: rgb(241 242 246 / 0.42);
+    stroke-width: 1.5;
+    stroke-linecap: round;
+  }
+  .ilustra :global(.giz--forte) {
+    stroke: rgb(241 242 246 / 0.7);
+    stroke-width: 2;
+  }
+  .ilustra :global(.giz--tracejado) {
+    stroke-dasharray: 6 8;
+  }
+  .ilustra :global(.giz--fantasma) {
+    stroke: rgb(255 224 46 / 0.18);
+    stroke-width: 3;
+  }
+  .ilustra :global(.giz--fantasma2) {
+    stroke: rgb(255 224 46 / 0.32);
+    stroke-width: 3;
+  }
+  .ilustra__texto {
+    fill: rgb(241 242 246 / 0.85);
+    font-family: var(--t-titulo);
+    font-weight: 800;
+    font-size: 15px;
+    letter-spacing: 0.04em;
+    text-anchor: middle;
+  }
+  .ilustra__jogador circle {
+    fill: var(--amarelo);
+  }
+  .ilustra__jogador text {
+    fill: var(--noite);
+    font-family: var(--t-titulo);
+    font-weight: 900;
+    font-size: 14px;
+    text-anchor: middle;
+    dominant-baseline: central;
+  }
+</style>

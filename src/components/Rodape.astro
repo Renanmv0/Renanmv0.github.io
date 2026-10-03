@@ -1,0 +1,215 @@
+---
+// Contato e rodapé. Os dados vêm de src/data/time.json (campo "contato").
+import { Picture } from 'astro:assets';
+import escudo from '../assets/marca/escudo.png';
+import Corte from './Corte.astro';
+import Ph from './Ph.astro';
+import Botao from './Botao.astro';
+import Icone from './Icone.astro';
+import PalavraChoque from './PalavraChoque.astro';
+import { time, linkWhatsapp, whatsappPronto, linkInstagram, ehPlaceholder } from '../lib/dados';
+
+const { contato, treino } = time;
+const instagram = linkInstagram();
+const emailOk = !ehPlaceholder(contato.email) && contato.email.includes('@');
+const whatsappVisivel = contato.whatsapp.replace(/\D/g, '').replace(/^55(\d{2})(\d{4,5})(\d{4})$/, '($1) $2-$3');
+const ano = new Date().getFullYear();
+---
+
+<footer class="rodape" id="contato" aria-labelledby="contato-titulo">
+  <Corte posicao="topo" cor="var(--noite)" forma={2} />
+
+  <div class="container">
+    <h2 class="rodape__chamada" id="contato-titulo">
+      <span class="sr-only">Vem pro Choque</span>
+      <span class="linha contorno" aria-hidden="true" data-entrada-lateral="-14">Vem pro</span>
+      <span class="linha rodape__choque" aria-hidden="true" data-entrada-lateral="14"><PalavraChoque /></span>
+    </h2>
+
+    <div class="rodape__grade">
+      <div class="rodape__cta">
+        <p class="abre">Primeira vez? Chama no WhatsApp e a gente te encaixa no próximo treino.</p>
+        <Botao href={linkWhatsapp()} icone={whatsappPronto() ? 'whatsapp' : 'raio'} dica={whatsappPronto() ? '(abre o WhatsApp)' : ''}>
+          Venha treinar com a gente
+        </Botao>
+      </div>
+
+      <ul class="contatos" role="list">
+        <li class="contato">
+          <Icone nome="whatsapp" />
+          <div>
+            <p class="contato__rotulo">WhatsApp</p>
+            {
+              whatsappPronto() ? (
+                <a class="contato__valor" href={linkWhatsapp()} target="_blank" rel="noopener">
+                  {whatsappVisivel}
+                </a>
+              ) : (
+                <p class="contato__valor">
+                  <Ph texto={contato.whatsapp} />
+                </p>
+              )
+            }
+          </div>
+        </li>
+        <li class="contato">
+          <Icone nome="instagram" />
+          <div>
+            <p class="contato__rotulo">Instagram</p>
+            {
+              instagram ? (
+                <a class="contato__valor" href={instagram} target="_blank" rel="noopener">
+                  @{contato.instagram.replace(/^@/, '')}
+                </a>
+              ) : (
+                <p class="contato__valor">
+                  <Ph texto={contato.instagram} />
+                </p>
+              )
+            }
+          </div>
+        </li>
+        <li class="contato">
+          <Icone nome="email" />
+          <div>
+            <p class="contato__rotulo">E-mail</p>
+            {
+              emailOk ? (
+                <a class="contato__valor" href={`mailto:${contato.email}`}>
+                  {contato.email}
+                </a>
+              ) : (
+                <p class="contato__valor">
+                  <Ph texto={contato.email} />
+                </p>
+              )
+            }
+          </div>
+        </li>
+        <li class="contato">
+          <Icone nome="mapa" />
+          <div>
+            <p class="contato__rotulo">Onde treinamos</p>
+            <a class="contato__valor" href={treino.linkMapa} target="_blank" rel="noopener">
+              {treino.local}
+            </a>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="rodape__base container">
+    <Picture src={escudo} formats={['avif', 'webp']} widths={[56, 112]} sizes="56px" alt="" class="rodape__escudo" />
+    <p>
+      © {ano} <span translate="no">{time.nome}</span>. {time.cidade}, {time.estado}.
+    </p>
+    <a class="link-forte rodape__topo" href="#topo">Voltar ao topo</a>
+  </div>
+  <div class="zebrado rodape__zebra" aria-hidden="true"></div>
+</footer>
+
+<style>
+  .rodape {
+    position: relative;
+    isolation: isolate;
+    overflow-x: clip;
+    padding-top: var(--secao);
+    background: var(--noite);
+  }
+  .rodape__chamada {
+    font-size: clamp(5rem, 27vw, 19rem);
+    line-height: 0.82;
+  }
+  .rodape__chamada .linha {
+    display: block;
+    white-space: nowrap;
+  }
+  .rodape__chamada .contorno {
+    color: transparent;
+    -webkit-text-stroke: 2px var(--giz);
+  }
+  .rodape__choque {
+    color: var(--amarelo);
+  }
+  .rodape__grade {
+    display: grid;
+    gap: 3rem;
+    margin-top: clamp(2.5rem, 7vw, 4.5rem);
+  }
+  .rodape__cta {
+    display: grid;
+    gap: 1.5rem;
+    justify-items: start;
+  }
+
+  .contatos {
+    display: grid;
+    gap: 1.25rem;
+    list-style: none;
+    padding: 0;
+  }
+  .contato {
+    display: grid;
+    grid-template-columns: 2.75rem 1fr;
+    gap: 0.9rem;
+    align-items: center;
+  }
+  .contato :global(.icone) {
+    width: 2.75rem;
+    height: 2.75rem;
+    padding: 0.55rem;
+    background: var(--noite-2);
+    color: var(--amarelo);
+  }
+  .contato__rotulo {
+    font-size: var(--fs-pequeno);
+    font-weight: 600;
+    color: var(--nevoa);
+  }
+  .contato__valor {
+    font-family: var(--t-titulo);
+    font-weight: 800;
+    font-size: 1.5rem;
+    line-height: 1.15;
+    text-decoration: none;
+    overflow-wrap: anywhere;
+  }
+  a.contato__valor:hover {
+    color: var(--amarelo);
+  }
+
+  .rodape__base {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 1.5rem;
+    margin-top: clamp(4rem, 10vw, 7rem);
+    padding-block: 1.5rem;
+    border-top: 1px solid var(--noite-3);
+    font-size: var(--fs-pequeno);
+    color: var(--nevoa);
+  }
+  .rodape__base :global(.rodape__escudo) {
+    width: 3.5rem;
+    height: auto;
+  }
+  .rodape__topo {
+    margin-left: auto;
+    color: var(--giz);
+  }
+  .rodape__zebra {
+    height: 18px;
+  }
+
+  @media (min-width: 1024px) {
+    .rodape__grade {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      align-items: start;
+    }
+    .contatos {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 2rem 1.5rem;
+    }
+  }
+</style>

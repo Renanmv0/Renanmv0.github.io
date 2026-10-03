@@ -1,0 +1,53 @@
+{
+  "_leia": "Informações gerais do time. Troque os textos entre aspas. Tudo que estiver entre colchetes, como [PREENCHER], aparece marcado com fita amarela no site até ser trocado. Campos \"confirmado\": false mostram um selo [confirmar] — mude para true quando a informação estiver certa.",
+
+  "nome": "Choque Lacrosse",
+  "cidade": "São Paulo",
+  "estado": "SP",
+  "fundacao": { "ano": 2023, "confirmado": false, "_leia": "O contador de anos de time é calculado sozinho a partir deste ano." },
+
+  "descricaoSeo": "Choque Lacrosse, time de lacrosse de São Paulo. Treinos abertos para iniciantes: a gente ensina do zero e empresta o equipamento. Venha treinar com a gente.",
+
+  "contato": {
+    "_leia": "whatsapp: só números, com 55 + DDD (ex.: 5511987654321). instagram: o usuário sem @ (ex.: choquelacrosse).",
+    "whatsapp": "[PREENCHER]",
+    "mensagemWhatsapp": "Oi! Vi o site do Choque e quero fazer uma aula experimental de lacrosse.",
+    "mensagemPatrocinio": "Oi! Vi o site do Choque e quero conversar sobre patrocínio.",
+    "instagram": "[PREENCHER]",
+    "email": "[PREENCHER]"
+  },
+
+  "treino": {
+    "local": "Centro Esportivo Tietê",
+    "endereco": "",
+    "linkMapa": "https://www.google.com/maps/search/?api=1&query=Centro+Esportivo+Tiet%C3%AA+S%C3%A3o+Paulo",
+    "dias": "Sábados ou domingos",
+    "horario": "9h às 12h ou 15h às 18h",
+    "confirmado": false,
+    "chegada": "Chegue 15 minutos antes para aquecer.",
+    "levar": ["Roupa de treino", "Chuteira ou tênis", "Garrafa de água", "Protetor solar"],
+    "emprestamos": ["Taco", "Luvas", "Capacete"]
+  },
+
+  "numeros": [
+    { "valor": 14, "rotulo": "atletas no elenco", "confirmado": false },
+    { "valor": 6, "rotulo": "jogos disputados", "confirmado": false }
+  ],
+
+  "historia": [
+    "O Choque nasceu de um grupo de amigos que queria jogar lacrosse em São Paulo, mesmo com pouco equipamento e muita gente perguntando que esporte era aquele. Em [ANO DE FUNDAÇÃO], vieram os primeiros treinos.",
+    "Hoje o time treina no Centro Esportivo Tietê, disputa jogos e recebe quem nunca pegou num taco. A missão continua a mesma: espalhar o lacrosse pelo Brasil e mostrar a garra brasileira em campo."
+  ],
+
+  "valores": [
+    { "titulo": "Velocidade", "texto": "Jogo rápido pede cabeça rápida. A gente treina para decidir antes do adversário." },
+    { "titulo": "Impacto", "texto": "Entrega total em cada disputa de bola, sempre dentro das regras e com respeito." },
+    { "titulo": "Corrente", "texto": "Ninguém joga sozinho. Quem chega novo entra na corrente desde o primeiro treino." }
+  ],
+
+  "video": {
+    "_leia": "Vídeo da seção O que é lacrosse. youtubeId é o código depois de v= no link do YouTube. Deixe vazio (\"\") para esconder.",
+    "youtubeId": "bw8KCj1uzNA",
+    "titulo": "Veja o lacrosse em movimento"
+  }
+}

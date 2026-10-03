@@ -1,0 +1,14 @@
+{
+  "_leia": "Patrocinadores e apoiadores. logo: arquivo dentro de src/assets/patrocinadores/ (ex.: \"loja-x.png\", de preferência PNG com fundo transparente ou SVG). site: endereço completo começando com https:// (ou \"\").",
+  "patrocinadores": [
+    { "nome": "[PATROCINADOR MASTER]", "logo": "", "site": "" },
+    { "nome": "[APOIADOR]", "logo": "", "site": "" },
+    { "nome": "[APOIADOR]", "logo": "", "site": "" }
+  ],
+  "beneficios": [
+    "Sua marca na camisa de jogo",
+    "Presença nos posts e vídeos do Instagram",
+    "Logo e link aqui no site",
+    "[OUTRO BENEFÍCIO DA COTA]"
+  ]
+}

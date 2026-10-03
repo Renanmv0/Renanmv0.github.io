@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<style>
+  /* Modelo da imagem de compartilhamento (1200 x 630). Gerada por scripts/gerar-og.mjs */
+  @font-face { font-family: 'Titulo'; src: url('../node_modules/@fontsource-variable/big-shoulders-display/files/big-shoulders-display-latin-wght-normal.woff2') format('woff2'); font-weight: 100 900; }
+  @font-face { font-family: 'Texto'; src: url('../node_modules/@fontsource/barlow/files/barlow-latin-600-normal.woff2') format('woff2'); font-weight: 600; }
+  * { margin: 0; box-sizing: border-box; }
+  html, body { width: 1200px; height: 630px; overflow: hidden; background: #0b0e1a; }
+  .foto { position: absolute; inset: 0 0 0 46%; clip-path: polygon(20% 0, 100% 0, 100% 100%, 0 100%); }
+  .foto img { width: 100%; height: 100%; object-fit: cover; object-position: 55% 72%; }
+  .foto::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(11,14,26,.7), rgba(11,14,26,0) 45%), linear-gradient(0deg, rgba(11,14,26,.55), rgba(11,14,26,0) 40%); }
+  .conteudo { position: absolute; left: 64px; top: 52px; }
+  .escudo { width: 84px; }
+  h1 { font-family: 'Titulo'; font-weight: 900; text-transform: uppercase; line-height: .8; margin-top: 26px; }
+  .choque { display: flex; font-size: 232px; color: #ffe02e; letter-spacing: -.01em; }
+  .q { position: relative; display: inline-block; }
+  .q svg { position: absolute; left: 47%; top: 63%; width: .3em; height: .5em; overflow: visible; fill: #ffe02e; stroke: #0b0e1a; stroke-width: 7px; paint-order: stroke; transform: rotate(-8deg); }
+  .linha2 { display: flex; align-items: baseline; gap: 22px; font-size: 92px; margin-top: 18px; }
+  .lacrosse { color: transparent; -webkit-text-stroke: 2.5px #f1f2f6; }
+  .cidade { font-size: 46px; color: #f1f2f6; letter-spacing: .04em; }
+  p { font-family: 'Texto'; font-weight: 600; font-size: 30px; color: #f1f2f6; margin-top: 26px; }
+  .zebra { position: absolute; inset: auto 0 0; height: 22px; background: repeating-linear-gradient(-45deg, #ffe02e 0 18px, #0b0e1a 18px 36px); }
+</style>
+</head>
+<body>
+  <div class="foto"><img src="../src/assets/fotos/time.jpg" alt=""></div>
+  <div class="conteudo">
+    <img class="escudo" src="../src/assets/marca/escudo.png" alt="">
+    <h1>
+      <span class="choque">CHO<span class="q">Q<svg viewBox="0 0 60 100"><polygon points="36 0 4 54 28 54 14 100 58 38 34 38 48 0"/></svg></span>UE</span>
+      <span class="linha2"><span class="lacrosse">LACROSSE</span><span class="cidade">SÃO PAULO</span></span>
+    </h1>
+    <p>Treinos abertos para iniciantes</p>
+  </div>
+  <div class="zebra"></div>
+</body>
+</html>

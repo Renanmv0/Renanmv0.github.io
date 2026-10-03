@@ -1,0 +1,194 @@
+---
+// Duas faixas zebradas cruzadas correndo em sentidos opostos.
+// O movimento é em CSS (leve, roda na placa de vídeo); o JavaScript só acelera
+// a faixa conforme a velocidade da rolagem. Tem botão de pausa (acessibilidade).
+import Icone from './Icone.astro';
+
+const palavras = ['Velocidade', 'Impacto', 'Corrente', 'Lacrosse em São Paulo'];
+// Cada metade do trilho repete as palavras para sempre cobrir a tela inteira
+const metade = [...palavras, ...palavras];
+---
+
+<div class="fitas" data-fitas>
+  <div class="fita fita--a" aria-hidden="true">
+    <div class="fita__trilho">
+      {
+        [0, 1].map(() =>
+          metade.map((palavra) => (
+            <span class="fita__item">
+              {palavra}
+              <Icone nome="raio" class="fita__raio" tamanho={40} />
+            </span>
+          )),
+        )
+      }
+    </div>
+  </div>
+  <div class="fita fita--b" aria-hidden="true">
+    <div class="fita__trilho">
+      {
+        [0, 1].map(() =>
+          metade.map((palavra) => (
+            <span class="fita__item">
+              {palavra}
+              <Icone nome="raio" class="fita__raio" tamanho={40} />
+            </span>
+          )),
+        )
+      }
+    </div>
+  </div>
+  <button class="fitas__pausa" type="button" aria-pressed="false" data-pausar-fitas>
+    <span class="fitas__icone-pausa"><Icone nome="pausa" tamanho={16} /></span>
+    <span class="fitas__icone-play"><Icone nome="play" tamanho={16} /></span>
+    <span class="sr-only">Pausar as faixas animadas</span>
+  </button>
+</div>
+
+<style>
+  .fitas {
+    position: absolute;
+    inset: auto 0 0;
+    height: clamp(7rem, 20vw, 10.5rem);
+    z-index: 5;
+    overflow: clip;
+    pointer-events: none;
+  }
+  .fita {
+    position: absolute;
+    left: -10%;
+    width: 120%;
+    overflow: hidden;
+    font-family: var(--t-titulo);
+    font-weight: 900;
+    font-size: clamp(1.9rem, 7.5vw, 3.9rem);
+    line-height: 1;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .fita--a {
+    bottom: 22%;
+    background: var(--amarelo);
+    color: var(--noite);
+    transform: rotate(-4deg);
+    /* listras finas de "fita de perigo" nas bordas */
+    border-block: 7px solid transparent;
+    border-image: repeating-linear-gradient(-45deg, var(--noite) 0 8px, var(--amarelo) 8px 16px) 7;
+    z-index: 2;
+  }
+  .fita--b {
+    bottom: 30%;
+    background: var(--noite-2);
+    color: var(--amarelo);
+    transform: rotate(3deg);
+    border-block: 2px solid var(--amarelo);
+    z-index: 1;
+  }
+  .fita--b .fita__item {
+    color: transparent;
+    -webkit-text-stroke: 1.5px var(--amarelo);
+  }
+  .fita--b :global(.fita__raio) {
+    color: var(--amarelo);
+  }
+
+  .fita__trilho {
+    display: flex;
+    width: max-content;
+    padding-block: 0.32em 0.24em;
+    will-change: transform;
+    animation: correr 38s linear infinite;
+  }
+  .fita--b .fita__trilho {
+    animation-duration: 46s;
+    animation-direction: reverse;
+  }
+  .fitas.is-pausado .fita__trilho {
+    animation-play-state: paused;
+  }
+  .fita__item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35em;
+    padding-right: 0.35em;
+  }
+  .fita__item :global(.fita__raio) {
+    width: 0.8em;
+    height: 0.8em;
+  }
+
+  .fitas__pausa {
+    position: absolute;
+    right: max(var(--margem), env(safe-area-inset-right));
+    bottom: 0.5rem;
+    z-index: 3;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    background: var(--noite);
+    color: var(--amarelo);
+    border: 2px solid var(--amarelo);
+    pointer-events: auto;
+  }
+  .fitas__icone-play {
+    display: none;
+  }
+  .fitas.is-pausado .fitas__icone-pausa {
+    display: none;
+  }
+  .fitas.is-pausado .fitas__icone-play {
+    display: block;
+  }
+
+  @keyframes correr {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .fita__trilho {
+      animation: none;
+    }
+    .fitas__pausa {
+      display: none;
+    }
+  }
+
+  /* Entrada: a fita é "esticada" depois que o título bate */
+  @media (prefers-reduced-motion: no-preference) {
+    .fita {
+      animation: esticar 0.8s var(--ease-choque) both;
+    }
+    .fita--a {
+      animation-delay: 0.95s;
+      --giro: -4deg;
+    }
+    .fita--b {
+      animation-delay: 1.05s;
+      --giro: 3deg;
+      transform-origin: right center;
+    }
+  }
+  @keyframes esticar {
+    from {
+      transform: rotate(var(--giro)) scaleX(0);
+    }
+    to {
+      transform: rotate(var(--giro)) scaleX(1);
+    }
+  }
+</style>
+
+<script>
+  // Botão de pausa das faixas (critério de acessibilidade: movimento automático
+  // com mais de 5 segundos precisa poder ser pausado).
+  document.querySelectorAll<HTMLElement>('[data-fitas]').forEach((fitas) => {
+    const botao = fitas.querySelector<HTMLButtonElement>('[data-pausar-fitas]');
+    botao?.addEventListener('click', () => {
+      const pausado = fitas.classList.toggle('is-pausado');
+      botao.setAttribute('aria-pressed', String(pausado));
+    });
+  });
+</script>

@@ -1,0 +1,194 @@
+---
+// "Apoie o Choque": convite a patrocinadores e logos dos apoiadores
+// (src/data/patrocinadores.json).
+import { Image } from 'astro:assets';
+import Corte from './Corte.astro';
+import Ph from './Ph.astro';
+import Botao from './Botao.astro';
+import Icone from './Icone.astro';
+import { time, patrocinio, linkWhatsapp, whatsappPronto, ehPlaceholder } from '../lib/dados';
+import { imagem } from '../lib/imagens';
+
+const apoiadores = patrocinio.patrocinadores.map((p) => ({ ...p, img: imagem(p.logo, 'patrocinadores') }));
+const email = time.contato.email;
+const linkEmail = !ehPlaceholder(email) && email.includes('@') ? `mailto:${email}?subject=${encodeURIComponent('Patrocínio do Choque Lacrosse')}` : null;
+---
+
+<section class="secao secao--amarelo apoie" id="apoie" aria-labelledby="apoie-titulo">
+  <Corte posicao="topo" cor="var(--amarelo)" />
+
+  <div class="container apoie__grade">
+    <div class="apoie__texto">
+      <h2 class="titulo-secao" id="apoie-titulo" data-titulo>
+        <span class="linha apoie__menor">Sua marca</span>
+        <span class="linha">em campo</span>
+      </h2>
+      <p class="abre" data-surge>
+        O lacrosse é novo no Brasil e volta às Olimpíadas em Los Angeles 2028, depois de mais de um século fora. Quem
+        apoia o Choque agora cresce junto com o esporte em São Paulo.
+      </p>
+      <ul class="beneficios" role="list" data-surge>
+        {
+          patrocinio.beneficios.map((b) => (
+            <li>
+              <Icone nome="raio" tamanho={22} />
+              <span>
+                <Ph texto={b} />
+              </span>
+            </li>
+          ))
+        }
+      </ul>
+      <div class="apoie__acoes" data-surge>
+        <Botao
+          href={whatsappPronto() ? linkWhatsapp(time.contato.mensagemPatrocinio) : (linkEmail ?? '#contato')}
+          variante="noite"
+          icone={whatsappPronto() ? 'whatsapp' : 'raio'}
+          dica={whatsappPronto() ? '(abre o WhatsApp)' : ''}
+        >
+          Quero apoiar o Choque
+        </Botao>
+        {linkEmail && whatsappPronto() && (
+          <a class="link-forte" href={linkEmail}>
+            Prefiro e-mail
+          </a>
+        )}
+      </div>
+    </div>
+
+    <div class="apoiadores-caixa">
+      <h3 class="apoiadores__titulo">Quem já está com a gente</h3>
+      <ul class="apoiadores" role="list">
+        {
+          apoiadores.map((p, i) => {
+            const conteudo = p.img ? (
+              <Image src={p.img} alt={p.nome} width={320} class="apoiador__logo" />
+            ) : (
+              <span class="apoiador__nome">
+                <Ph texto={p.nome} />
+                <span class="apoiador__dica">[LOGO]</span>
+              </span>
+            );
+            return (
+              <li class:list={['apoiador', { 'apoiador--master': i === 0 }]} data-revela>
+                <span class="varredura varredura--noite" aria-hidden="true" />
+                {p.site ? (
+                  <a class="apoiador__caixa" href={p.site} target="_blank" rel="noopener">
+                    {conteudo}
+                  </a>
+                ) : (
+                  <div class="apoiador__caixa">{conteudo}</div>
+                )}
+              </li>
+            );
+          })
+        }
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .apoie {
+    padding-bottom: calc(var(--secao) + var(--corte));
+  }
+  .apoie__menor {
+    font-size: 0.6em;
+  }
+  .apoie__grade {
+    display: grid;
+    gap: clamp(3rem, 8vw, 5rem);
+  }
+  .apoie__texto {
+    display: grid;
+    gap: 1.5rem;
+    align-content: start;
+  }
+  .beneficios {
+    display: grid;
+    gap: 0.65rem;
+    list-style: none;
+    padding: 0;
+  }
+  .beneficios li {
+    display: flex;
+    gap: 0.6rem;
+    align-items: flex-start;
+    font-weight: 600;
+  }
+  .beneficios :global(.icone) {
+    flex: none;
+    margin-top: 0.15rem;
+  }
+  .apoie__acoes {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 1.75rem;
+    margin-top: 0.5rem;
+  }
+
+  .apoiadores__titulo {
+    font-size: var(--fs-h3);
+    margin-bottom: 1.25rem;
+  }
+  .apoiadores {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+    list-style: none;
+    padding: 0;
+  }
+  .apoiador {
+    position: relative;
+  }
+  .apoiador--master {
+    grid-column: 1 / -1;
+  }
+  .apoiador__caixa {
+    display: grid;
+    place-items: center;
+    min-height: 8rem;
+    height: 100%;
+    padding: 1.25rem;
+    background: rgb(11 14 26 / 0.06);
+    border: 3px solid var(--noite);
+    color: var(--noite);
+    text-align: center;
+    text-decoration: none;
+  }
+  .apoiador--master .apoiador__caixa {
+    min-height: 10rem;
+  }
+  a.apoiador__caixa:hover {
+    background: rgb(11 14 26 / 0.12);
+  }
+  .apoiador__caixa :global(.apoiador__logo) {
+    max-height: 5rem;
+    width: auto;
+    object-fit: contain;
+  }
+  .apoiador__nome {
+    display: grid;
+    gap: 0.35rem;
+    font-family: var(--t-titulo);
+    font-weight: 900;
+    font-size: 1.35rem;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+  .apoiador__dica {
+    font-family: var(--t-texto);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    opacity: 0.7;
+  }
+
+  @media (min-width: 1024px) {
+    .apoie__grade {
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+      align-items: center;
+    }
+  }
+</style>

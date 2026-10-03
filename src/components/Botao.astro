@@ -1,0 +1,108 @@
+---
+// Botão de chamada para ação com canto cortado e "carga" que varre no hover.
+// O chanfro fica numa camada interna para o contorno de foco (teclado) não ser cortado.
+import Icone from './Icone.astro';
+
+interface Props {
+  href: string;
+  variante?: 'amarelo' | 'noite';
+  icone?: 'raio' | 'whatsapp' | 'instagram' | 'email' | 'seta-baixo' | null;
+  /** Texto extra só para leitores de tela, ex.: "(abre o WhatsApp)". */
+  dica?: string;
+  class?: string;
+}
+
+const { href, variante = 'amarelo', icone = 'raio', dica = '', class: classe } = Astro.props;
+const externo = /^https?:/.test(href);
+---
+
+<a
+  class:list={['botao', `botao--${variante}`, classe]}
+  href={href}
+  data-magnetico
+  {...externo ? { target: '_blank', rel: 'noopener' } : {}}
+>
+  <span class="botao__fundo" aria-hidden="true"><span class="botao__carga"></span></span>
+  <span class="botao__texto"><slot />{dica && <span class="sr-only"> {dica}</span>}</span>
+  {icone && <Icone nome={icone} class="botao__icone" tamanho={22} />}
+</a>
+
+<style>
+  .botao {
+    --fundo: var(--amarelo);
+    --carga: var(--giz);
+    --tinta: var(--noite);
+    position: relative;
+    isolation: isolate;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6em;
+    min-height: 3.5rem;
+    padding: 0.9rem 1.5rem 0.85rem;
+    color: var(--tinta);
+    font-family: var(--t-titulo);
+    font-weight: 800;
+    font-size: 1.375rem;
+    line-height: 1;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: transform var(--rapido) var(--ease-choque);
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  .botao--noite {
+    --fundo: var(--noite);
+    --carga: var(--noite-3);
+    --tinta: var(--amarelo);
+  }
+
+  .botao__fundo {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+    background: var(--fundo);
+    clip-path: polygon(
+      0 0,
+      calc(100% - var(--chanfro)) 0,
+      100% var(--chanfro),
+      100% 100%,
+      var(--chanfro) 100%,
+      0 calc(100% - var(--chanfro))
+    );
+  }
+  .botao__carga {
+    position: absolute;
+    inset: 0;
+    background: var(--carga);
+    transform: translateX(-125%) skewX(-18deg);
+    transform-origin: left;
+    transition: transform 380ms var(--ease-choque);
+  }
+  .botao :global(.botao__icone) {
+    flex: none;
+    transition: transform var(--medio) var(--ease-choque);
+  }
+
+  @media (hover: hover) {
+    .botao:hover .botao__carga {
+      transform: translateX(0) skewX(-18deg) scaleX(1.3);
+    }
+    .botao:hover :global(.botao__icone) {
+      animation: faisca 420ms steps(1, end);
+    }
+  }
+  .botao:active {
+    transform: scale(0.96);
+  }
+
+  @keyframes faisca {
+    0% { transform: translate(0, 0) rotate(0); }
+    25% { transform: translate(2px, -2px) rotate(-12deg); }
+    50% { transform: translate(-2px, 1px) rotate(10deg); }
+    75% { transform: translate(1px, -1px) rotate(-6deg); }
+    100% { transform: none; }
+  }
+</style>
