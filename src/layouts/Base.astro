@@ -1,0 +1,89 @@
+---
+// Estrutura comum a todas as páginas: <head> com SEO, fontes, ícones e
+// o link de compartilhamento (Open Graph) usado por WhatsApp e Instagram.
+import { Font } from 'astro:assets';
+import '../styles/global.css';
+import { time, linkInstagram } from '../lib/dados';
+
+interface Props {
+  titulo?: string;
+  descricao?: string;
+  semIndice?: boolean;
+}
+
+const {
+  titulo = `${time.nome} | Time de lacrosse em ${time.cidade}`,
+  descricao = time.descricaoSeo,
+  semIndice = false,
+} = Astro.props;
+
+const site = Astro.site ?? new URL('https://renanmv0.github.io');
+const canonico = new URL(Astro.url.pathname, site).href;
+const imagemCompartilhar = new URL('/og.jpg', site).href;
+const instagram = linkInstagram();
+
+// Dados estruturados: ajudam o Google a entender que isto é um time esportivo.
+const dadosEstruturados = {
+  '@context': 'https://schema.org',
+  '@type': 'SportsTeam',
+  name: time.nome,
+  sport: 'Lacrosse',
+  url: site.href,
+  logo: new URL('/icone-512.png', site).href,
+  image: imagemCompartilhar,
+  description: time.descricaoSeo,
+  location: {
+    '@type': 'Place',
+    name: time.treino.local,
+    address: { '@type': 'PostalAddress', addressLocality: time.cidade, addressRegion: time.estado, addressCountry: 'BR' },
+  },
+  ...(instagram ? { sameAs: [instagram] } : {}),
+};
+---
+
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{titulo}</title>
+    <meta name="description" content={descricao} />
+    <link rel="canonical" href={canonico} />
+    {semIndice && <meta name="robots" content="noindex" />}
+    <meta name="theme-color" content="#0b0e1a" />
+    <meta name="color-scheme" content="dark" />
+
+    <!-- Ícones -->
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <!-- Compartilhamento (WhatsApp, Instagram, Facebook, X) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:site_name" content={time.nome} />
+    <meta property="og:title" content={titulo} />
+    <meta property="og:description" content={descricao} />
+    <meta property="og:url" content={canonico} />
+    <meta property="og:image" content={imagemCompartilhar} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={`${time.nome}: elenco reunido em ${time.cidade}`} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Fontes do próprio site (as do topo da página carregam primeiro) -->
+    <Font cssVariable="--fonte-titulo" preload />
+    <Font cssVariable="--fonte-texto" preload={[{ weight: 400 }]} />
+    <Font cssVariable="--fonte-numero" />
+
+    <script type="application/ld+json" set:html={JSON.stringify(dadosEstruturados)} />
+
+    <!-- Marca que o JavaScript está ativo (sem JS, todo o conteúdo aparece parado) -->
+    <script is:inline>document.documentElement.classList.add('js');</script>
+  </head>
+  <body>
+    <a class="pular" href="#conteudo">Pular para o conteúdo</a>
+    <slot />
+  </body>
+</html>

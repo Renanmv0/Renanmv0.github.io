@@ -1,0 +1,349 @@
+---
+// "Quem veste a camisa": cards do elenco (src/data/elenco.json).
+// Foto do atleta em src/assets/elenco/; sem foto, aparece a silhueta do capacete.
+import { Picture } from 'astro:assets';
+import Corte from './Corte.astro';
+import Ph from './Ph.astro';
+import Ilustracao from './Ilustracao.astro';
+import { elenco, POSICOES, ehPlaceholder } from '../lib/dados';
+import { imagem } from '../lib/imagens';
+
+const atletas = elenco.map((a) => ({ ...a, imagem: imagem(a.foto, 'elenco') }));
+const contagem = (n: number) => `${n} ${n === 1 ? 'atleta' : 'atletas'}`;
+---
+
+<section class="secao elenco" id="elenco" aria-labelledby="elenco-titulo">
+  <Corte posicao="topo" cor="var(--noite)" />
+  <p class="elenco__fundo" aria-hidden="true" data-deslizar="25">07 12 15 88 01 09 03 14</p>
+
+  <div class="container">
+    <div class="elenco__cabeca">
+      <h2 class="titulo-secao" id="elenco-titulo" data-titulo>
+        <span class="linha">Quem veste</span>
+        <span class="linha estencil">a camisa</span>
+      </h2>
+
+      <div class="filtros" role="group" aria-label="Filtrar elenco por posição" data-filtros hidden>
+        <button type="button" class="filtro" aria-pressed="true" data-filtro="todos">Todos</button>
+        {
+          POSICOES.map((p) => (
+            <button type="button" class="filtro" aria-pressed="false" data-filtro={p}>
+              {p}
+            </button>
+          ))
+        }
+      </div>
+    </div>
+    <p class="sr-only" aria-live="polite" data-filtro-contagem>{contagem(atletas.length)}</p>
+
+    <ul class="atletas" role="list">
+      {
+        atletas.map((a) => (
+          <li class:list={['atleta', { 'atleta--capitao': a.capitao }]} data-posicao={a.posicao} data-revela>
+            <span class="varredura" aria-hidden="true" />
+            <article class="atleta__card">
+              <div class="atleta__foto">
+                <span class="atleta__numero atleta__numero--contorno tabular" aria-hidden="true">
+                  {a.numero}
+                </span>
+                <span class="atleta__numero atleta__numero--cheio tabular" aria-hidden="true">
+                  {a.numero}
+                </span>
+                {a.imagem ? (
+                  <Picture
+                    src={a.imagem}
+                    formats={['avif', 'webp']}
+                    widths={[240, 360, 520]}
+                    sizes="(min-width: 1024px) 22vw, 46vw"
+                    alt={ehPlaceholder(a.nome) ? 'Foto do atleta' : `Foto de ${a.nome}`}
+                    class="atleta__img"
+                  />
+                ) : (
+                  <div class="atleta__silhueta">
+                    <Ilustracao nome="capacete" />
+                    <span class="ph">[FOTO DO ATLETA]</span>
+                  </div>
+                )}
+                {a.capitao && (
+                  <span class="atleta__capitao" title="Capitão">
+                    C<span class="sr-only">apitão</span>
+                  </span>
+                )}
+              </div>
+              <div class="atleta__dados">
+                <h3 class="atleta__nome">
+                  <Ph texto={a.nome} />
+                </h3>
+                <p class="atleta__linha">
+                  <span class="sr-only">Número {a.numero}, posição: </span>
+                  <span class="etiqueta">{a.posicao}</span>
+                  <span class="atleta__camisa tabular" aria-hidden="true">
+                    #{a.numero}
+                  </span>
+                </p>
+              </div>
+            </article>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .elenco {
+    padding-bottom: calc(var(--secao) + var(--corte));
+  }
+  .elenco__fundo {
+    position: absolute;
+    top: 3rem;
+    right: 0;
+    z-index: -1;
+    max-width: none;
+    white-space: nowrap;
+    font-family: var(--t-numero);
+    font-weight: 900;
+    font-size: clamp(8rem, 30vw, 22rem);
+    line-height: 0.8;
+    color: transparent;
+    -webkit-text-stroke: 2px rgb(255 224 46 / 0.09);
+    pointer-events: none;
+    user-select: none;
+  }
+  .elenco__cabeca {
+    display: grid;
+    gap: 2rem;
+    margin-bottom: clamp(2.5rem, 6vw, 4rem);
+  }
+
+  /* ---------- Filtros por posição ---------- */
+  .filtros {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .filtros[hidden] {
+    display: none;
+  }
+  .filtro {
+    min-height: 44px;
+    padding: 0.5rem 1rem 0.45rem;
+    border: 2px solid var(--noite-3);
+    font-family: var(--t-titulo);
+    font-weight: 800;
+    font-size: 1.15rem;
+    line-height: 1;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--giz);
+    transition:
+      background-color var(--rapido) ease,
+      border-color var(--rapido) ease,
+      color var(--rapido) ease;
+  }
+  .filtro:hover {
+    border-color: var(--amarelo);
+  }
+  .filtro[aria-pressed='true'] {
+    background: var(--amarelo);
+    border-color: var(--amarelo);
+    color: var(--noite);
+  }
+
+  /* ---------- Cards ---------- */
+  .atletas {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem 0.9rem;
+    list-style: none;
+    padding: 0;
+  }
+  .atleta {
+    position: relative;
+  }
+  .atleta[hidden] {
+    display: none;
+  }
+  .atleta__card {
+    display: grid;
+    gap: 0.75rem;
+  }
+  .atleta__foto {
+    position: relative;
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+    background:
+      linear-gradient(180deg, transparent 55%, rgb(11 14 26 / 0.85)),
+      var(--noite-2);
+    clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 0 100%);
+  }
+  .atleta__numero {
+    position: absolute;
+    right: -0.04em;
+    bottom: -0.12em;
+    z-index: 0;
+    font-family: var(--t-numero);
+    font-weight: 900;
+    font-size: clamp(6rem, 30vw, 10rem);
+    line-height: 1;
+    pointer-events: none;
+    transition: opacity var(--medio) ease;
+  }
+  .atleta__numero--contorno {
+    color: transparent;
+    -webkit-text-stroke: 2px rgb(255 224 46 / 0.55);
+  }
+  .atleta__numero--cheio {
+    color: var(--amarelo);
+    opacity: 0;
+  }
+  .atleta__foto :global(.atleta__img) {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .atleta__silhueta {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    justify-items: center;
+    align-content: center;
+    gap: 0.6rem;
+    height: 100%;
+    padding: 1rem;
+    text-align: center;
+  }
+  .atleta__silhueta :global(svg) {
+    width: 62%;
+    opacity: 0.5;
+  }
+  .atleta__silhueta .ph {
+    font-size: 0.8rem;
+    font-weight: 700;
+  }
+  .atleta__capitao {
+    position: absolute;
+    top: 0.6rem;
+    left: 0.6rem;
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    width: 2.2rem;
+    height: 2.2rem;
+    background: var(--amarelo);
+    color: var(--noite);
+    font-family: var(--t-titulo);
+    font-weight: 900;
+    font-size: 1.4rem;
+    line-height: 1;
+  }
+  .atleta__nome {
+    font-size: clamp(1.35rem, 4.6vw, 1.9rem);
+    line-height: 0.95;
+    overflow-wrap: anywhere;
+  }
+  .atleta__linha {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: 0.4rem;
+  }
+  .atleta__camisa {
+    font-family: var(--t-titulo);
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: var(--nevoa);
+  }
+
+  /* Hover/foco: o card leva um "choque" e o número acende */
+  @media (hover: hover) {
+    .atleta:hover .atleta__numero--cheio {
+      opacity: 1;
+    }
+    .atleta:hover .atleta__numero--contorno {
+      opacity: 0;
+    }
+  }
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .atleta:hover .atleta__card {
+      animation: choque 0.36s steps(1, end);
+    }
+  }
+  @keyframes choque {
+    0% { transform: translate(0, 0); }
+    20% { transform: translate(-3px, 1px) rotate(-0.6deg); }
+    40% { transform: translate(3px, -1px) rotate(0.5deg); }
+    60% { transform: translate(-2px, 0) rotate(-0.3deg); }
+    80% { transform: translate(1px, 1px); }
+    100% { transform: none; }
+  }
+
+  @media (min-width: 700px) {
+    .atletas {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 2rem 1.25rem;
+    }
+    .atleta__numero {
+      font-size: clamp(7rem, 17vw, 12rem);
+    }
+  }
+  @media (min-width: 1024px) {
+    .elenco__cabeca {
+      justify-items: end;
+      text-align: right;
+    }
+    .atletas {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+    /* escalação "em linha", com colunas desencontradas */
+    .atleta:nth-child(4n + 2),
+    .atleta:nth-child(4n + 4) {
+      margin-top: 3.5rem;
+    }
+    .atleta__numero {
+      font-size: clamp(7rem, 11vw, 12rem);
+    }
+  }
+</style>
+
+<script>
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  // Filtro por posição (sem JavaScript, o elenco inteiro aparece)
+  document.querySelectorAll<HTMLElement>('[data-filtros]').forEach((grupo) => {
+    const secao = grupo.closest('section')!;
+    const atletas = Array.from(secao.querySelectorAll<HTMLElement>('[data-posicao]'));
+    const anuncio = secao.querySelector<HTMLElement>('[data-filtro-contagem]');
+    const botoes = Array.from(grupo.querySelectorAll<HTMLButtonElement>('[data-filtro]'));
+    grupo.hidden = false;
+
+    function aplicar(botao: HTMLButtonElement) {
+      const filtro = botao.dataset.filtro;
+      botoes.forEach((b) => b.setAttribute('aria-pressed', String(b === botao)));
+      let visiveis = 0;
+      atletas.forEach((a) => {
+        const mostrar = filtro === 'todos' || a.dataset.posicao === filtro;
+        a.hidden = !mostrar;
+        if (mostrar) visiveis++;
+      });
+      if (anuncio) anuncio.textContent = `${visiveis} ${visiveis === 1 ? 'atleta' : 'atletas'}`;
+      ScrollTrigger.refresh(); // a altura da página mudou
+    }
+
+    botoes.forEach((botao) =>
+      botao.addEventListener('click', () => {
+        aplicar(botao);
+        const url = new URL(location.href);
+        if (botao.dataset.filtro === 'todos') url.searchParams.delete('posicao');
+        else url.searchParams.set('posicao', botao.dataset.filtro ?? '');
+        history.replaceState(null, '', url);
+      }),
+    );
+
+    // Abre já filtrado se o link tiver ?posicao=...
+    const inicial = new URL(location.href).searchParams.get('posicao');
+    const botaoInicial = botoes.find((b) => b.dataset.filtro === inicial);
+    if (botaoInicial) aplicar(botaoInicial);
+  });
+</script>

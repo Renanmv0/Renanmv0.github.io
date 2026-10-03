@@ -1,0 +1,11 @@
+{
+  "_leia": "Fotos e vídeos da galeria, na ordem em que aparecem. Fotos: coloque o arquivo em src/assets/galeria/ e escreva o caminho a partir de src/assets (ex.: \"galeria/final-2026.jpg\"). Vídeos do YouTube: tipo \"video\" e o código do vídeo em youtubeId. legenda: descreva a foto (ela também é lida por leitores de tela).",
+  "itens": [
+    { "tipo": "foto", "arquivo": "fotos/time.jpg", "legenda": "Elenco do Choque reunido no Centro Esportivo Tietê" },
+    { "tipo": "foto", "arquivo": "fotos/treino.jpg", "legenda": "Coletivo de treino no gramado" },
+    { "tipo": "foto", "arquivo": "", "legenda": "[FOTO DE JOGO]" },
+    { "tipo": "video", "youtubeId": "", "legenda": "[VÍDEO DE MELHORES MOMENTOS]" },
+    { "tipo": "foto", "arquivo": "", "legenda": "[FOTO DE COMEMORAÇÃO]" },
+    { "tipo": "foto", "arquivo": "", "legenda": "[FOTO DE TREINO]" }
+  ]
+}

@@ -1,0 +1,11 @@
+---
+// Mostra um texto vindo dos JSON destacando os trechos [AINDA NÃO PREENCHIDOS]
+// com uma "fita de obra" amarela, para ninguém esquecer de trocar.
+interface Props {
+  texto: string;
+}
+const { texto } = Astro.props;
+const partes = texto.split(/(\[[^\]]+\])/g).filter(Boolean);
+---
+
+{partes.map((parte) => (/^\[[^\]]+\]$/.test(parte) ? <span class="ph">{parte}</span> : parte))}

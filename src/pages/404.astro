@@ -1,0 +1,50 @@
+---
+// Página de "não encontrado" (o GitHub Pages usa o 404.html gerado daqui)
+import Base from '../layouts/Base.astro';
+import Botao from '../components/Botao.astro';
+---
+
+<Base titulo="Página não encontrada | Choque Lacrosse" semIndice>
+  <main id="conteudo" class="erro">
+    <div class="container">
+      <p class="erro__codigo tabular" aria-hidden="true">404</p>
+      <h1 class="erro__titulo">Bola fora</h1>
+      <p class="abre">Essa página não existe ou mudou de lugar. A jogada continua na página inicial.</p>
+      <Botao href="/" icone="raio">Voltar para o início</Botao>
+    </div>
+    <div class="zebrado erro__zebra" aria-hidden="true"></div>
+  </main>
+</Base>
+
+<style>
+  .erro {
+    position: relative;
+    display: grid;
+    align-content: center;
+    min-height: 100svh;
+    padding-block: 4rem 6rem;
+    overflow: clip;
+  }
+  .erro .container {
+    display: grid;
+    gap: 1.5rem;
+    justify-items: start;
+  }
+  .erro__codigo {
+    font-family: var(--t-numero);
+    font-weight: 900;
+    font-size: clamp(7rem, 40vw, 20rem);
+    line-height: 0.8;
+    color: transparent;
+    -webkit-text-stroke: 2px var(--amarelo);
+  }
+  .erro__titulo {
+    font-size: var(--fs-h2);
+    color: var(--amarelo);
+  }
+  .erro__zebra {
+    position: absolute;
+    inset: auto 0 0;
+    height: 18px;
+  }
+</style>

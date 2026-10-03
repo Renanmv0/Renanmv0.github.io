@@ -1,0 +1,43 @@
+---
+// Borda em zigue-zague (um raio deitado) que liga uma seção à outra.
+// Fica presa ao topo ou à base da seção e usa a cor dela própria.
+interface Props {
+  posicao?: 'topo' | 'base';
+  cor?: string;
+  forma?: 1 | 2;
+}
+const { posicao = 'topo', cor = 'currentColor', forma = 1 } = Astro.props;
+
+const formas = {
+  1: 'M0 80V46l96 16 72-44 94 34 78-22 80 40 100-46 80 24 90-38 80 34 90-16 90 38 90-46 80 30 90-36 90 44 80-26 60 12v36z',
+  2: 'M0 80V30l110 34 70-50 100 46 70-30 110 42 80-48 100 34 70-24 90 40 80-36 110 30 70-22 100 38 90-44 80 32 60-16 50 4v36z',
+};
+---
+
+<div class:list={['corte', `corte--${posicao}`]} style={`--cor-corte:${cor}`} aria-hidden="true" data-corte>
+  <svg viewBox="0 0 1440 80" preserveAspectRatio="none" focusable="false"><path d={formas[forma]}></path></svg>
+</div>
+
+<style>
+  .corte {
+    position: absolute;
+    left: -6%;
+    width: 112%;
+    height: var(--corte);
+    pointer-events: none;
+    z-index: 1;
+  }
+  .corte svg {
+    width: 100%;
+    height: 100%;
+    fill: var(--cor-corte);
+  }
+  .corte--topo {
+    top: 1px;
+    transform: translateY(-100%);
+  }
+  .corte--base {
+    bottom: 1px;
+    transform: translateY(100%) scaleY(-1);
+  }
+</style>

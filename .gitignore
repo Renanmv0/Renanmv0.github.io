@@ -1,0 +1,13 @@
+# Dependências e arquivos gerados (recriados com npm install / npm run build)
+node_modules/
+dist/
+.astro/
+
+# Prints e relatórios gerados pelo npm run qa
+qa/
+
+# Sistema
+.DS_Store
+Thumbs.db
+*.log
+.env

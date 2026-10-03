@@ -1,0 +1,424 @@
+---
+// Abertura da página. A entrada (raio, flash, letras batendo) é feita em CSS
+// para aparecer no primeiro quadro, sem esperar o JavaScript carregar.
+import { Picture } from 'astro:assets';
+import fotoTime from '../assets/fotos/time.jpg';
+import Botao from './Botao.astro';
+import Icone from './Icone.astro';
+import Fita from './Fita.astro';
+import { time, linkWhatsapp, whatsappPronto } from '../lib/dados';
+
+// Inclinação de cada letra ao chegar (dá o efeito de impacto desalinhado)
+const letras = [...'CHOQUE'].map((letra, i) => ({ letra, giro: [-7, 5, -4, 6, -5, 4][i] }));
+---
+
+<section class="hero" id="topo" aria-labelledby="hero-titulo">
+  <div class="hero__foto">
+    <div class="hero__foto-movel" data-parallax="12">
+      <Picture
+        src={fotoTime}
+        formats={['avif', 'webp']}
+        widths={[480, 768, 1080, 1440, 1600]}
+        sizes="(min-width: 1024px) 64vw, 100vw"
+        alt="Elenco do Choque Lacrosse ajoelhado e em pé no gramado, com tacos e luvas, em frente às arquibancadas do Centro Esportivo Tietê"
+        loading="eager"
+        fetchpriority="high"
+        class="hero__img"
+      />
+    </div>
+    <span class="hero__cortina" aria-hidden="true"></span>
+  </div>
+
+  <span class="hero__flash" aria-hidden="true"></span>
+
+  <div class="hero__conteudo container">
+    <h1 class="hero__titulo" id="hero-titulo">
+      <span class="sr-only">{time.nome}</span>
+      <span class="hero__palavra" aria-hidden="true" translate="no">
+        {
+          letras.map(({ letra, giro }, i) => (
+            <span class:list={['hero__l', { 'hero__l--q': letra === 'Q' }]} style={`--i:${i};--giro:${giro}deg`}>
+              <span class="hero__mascara">
+                <span class="hero__letra">{letra}</span>
+              </span>
+              {letra === 'Q' && (
+                <>
+                  {/* o raio que cai do céu e atinge o Q */}
+                  <svg class="hero__descarga" viewBox="0 0 40 400" preserveAspectRatio="none" focusable="false">
+                    <polyline points="22,0 12,70 26,118 8,190 24,236 14,300 28,346 18,400" />
+                  </svg>
+                  {/* e fica como a "perna" do Q */}
+                  <svg class="hero__cauda" viewBox="0 0 60 100" focusable="false">
+                    <polygon points="36 0 4 54 28 54 14 100 58 38 34 38 48 0" />
+                  </svg>
+                </>
+              )}
+            </span>
+          ))
+        }
+      </span>
+      <span class="hero__linha2" aria-hidden="true">
+        <span class="hero__esporte">Lacrosse</span>
+        <span class="hero__cidade">{time.cidade}</span>
+      </span>
+    </h1>
+
+    <p class="hero__frase">
+      <strong>O esporte mais rápido sobre dois pés.</strong>
+      Treinos abertos para iniciantes: a gente ensina do zero e empresta o equipamento.
+    </p>
+
+    <div class="hero__acoes">
+      <Botao href={linkWhatsapp()} icone={whatsappPronto() ? 'whatsapp' : 'raio'} dica={whatsappPronto() ? '(abre o WhatsApp)' : ''}>
+        Venha treinar com a gente
+      </Botao>
+      <a class="link-forte hero__saiba" href="#lacrosse">
+        O que é lacrosse?
+        <Icone nome="seta-baixo" tamanho={20} />
+      </a>
+    </div>
+  </div>
+
+  <Fita />
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 100svh;
+    padding-top: calc(4rem + env(safe-area-inset-top));
+    background: var(--noite);
+    overflow: clip;
+  }
+
+  /* ---------- Foto ---------- */
+  .hero__foto {
+    position: relative;
+    height: clamp(17rem, 46svh, 34rem);
+    overflow: hidden;
+    clip-path: polygon(0 0, 100% 0, 100% 82%, 0 100%);
+  }
+  .hero__foto-movel {
+    position: absolute;
+    inset: -8% 0;
+  }
+  .hero__foto-movel :global(picture) {
+    display: block;
+    height: 100%;
+  }
+  .hero__foto-movel :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 74%;
+  }
+  .hero__foto::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(180deg, rgb(11 14 26 / 0.35) 0%, rgb(11 14 26 / 0) 30%),
+      linear-gradient(0deg, rgb(11 14 26 / 0.7) 0%, rgb(11 14 26 / 0) 45%);
+    pointer-events: none;
+  }
+  /* Painel que sai de cima da foto na entrada (corte diagonal) */
+  .hero__cortina {
+    position: absolute;
+    inset: 0 -30%;
+    background: var(--noite);
+    transform: translateX(120%) skewX(-14deg);
+    z-index: 1;
+  }
+
+  .hero__flash {
+    position: absolute;
+    inset: 0;
+    z-index: 6;
+    background: #fff6c2;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* ---------- Texto ---------- */
+  .hero__conteudo {
+    position: relative;
+    z-index: 4;
+    margin-top: calc(var(--fs-hero) * -0.78);
+    padding-bottom: clamp(9.5rem, 26vw, 13rem);
+  }
+
+  .hero__titulo {
+    display: grid;
+    line-height: 1;
+  }
+  .hero__palavra {
+    display: flex;
+    font-size: var(--fs-hero);
+    line-height: 0.8;
+    letter-spacing: -0.01em;
+    color: var(--amarelo);
+    margin-left: -0.04em;
+  }
+  .hero__l {
+    position: relative;
+    display: inline-block;
+  }
+  /* máscara: cada letra sobe "de dentro do chão" */
+  .hero__mascara {
+    display: inline-block;
+    overflow: clip;
+    /* folga para o topo arredondado das letras não ser cortado */
+    padding: 0.16em 0.02em 0.08em;
+    margin: -0.16em -0.02em -0.08em;
+  }
+  .hero__letra {
+    display: inline-block;
+  }
+  .hero__l--q {
+    z-index: 1;
+  }
+  /* Perna do Q em forma de raio (contorno marinho separa do amarelo) */
+  .hero__cauda {
+    position: absolute;
+    left: 47%;
+    top: 63%;
+    width: 0.3em;
+    height: 0.5em;
+    overflow: visible;
+    fill: var(--amarelo);
+    stroke: var(--noite);
+    stroke-width: 7px;
+    stroke-linejoin: round;
+    paint-order: stroke;
+    transform: rotate(-8deg);
+    transform-origin: 50% 0;
+  }
+  /* Descarga: risco de luz que vem do céu (só aparece na entrada) */
+  .hero__descarga {
+    position: absolute;
+    left: 38%;
+    bottom: 40%;
+    width: 0.32em;
+    height: 120svh;
+    overflow: visible;
+    fill: none;
+    stroke: #fffbe0;
+    stroke-width: 4px;
+    stroke-linejoin: bevel;
+    vector-effect: non-scaling-stroke;
+    filter: drop-shadow(0 0 6px var(--amarelo)) drop-shadow(0 0 22px rgb(255 224 46 / 0.6));
+    opacity: 0;
+    transform-origin: 50% 0;
+    pointer-events: none;
+  }
+  .hero__descarga polyline {
+    vector-effect: non-scaling-stroke;
+  }
+  .hero__linha2 {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.1em 0.45em;
+    margin-top: 0.1em;
+    font-size: clamp(2.6rem, 12vw, 6.5rem);
+    line-height: 0.85;
+  }
+  .hero__esporte {
+    color: transparent;
+    -webkit-text-stroke: 2px var(--giz);
+  }
+  .hero__cidade {
+    font-size: 0.42em;
+    color: var(--giz);
+    letter-spacing: 0.04em;
+  }
+
+  .hero__frase {
+    margin-top: 1.25rem;
+    max-width: 34ch;
+    color: var(--giz);
+  }
+  .hero__frase strong {
+    display: block;
+    font-family: var(--t-titulo);
+    font-weight: 800;
+    font-size: var(--fs-destaque);
+    line-height: 1.1;
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+    color: var(--amarelo);
+    margin-bottom: 0.25rem;
+  }
+
+  .hero__acoes {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1.5rem;
+    margin-top: 1.75rem;
+  }
+  .hero__saiba {
+    color: var(--giz);
+  }
+
+  /* ---------- Tablet ---------- */
+  @media (min-width: 700px) {
+    .hero__foto {
+      height: clamp(22rem, 50svh, 36rem);
+    }
+    .hero__conteudo {
+      margin-top: calc(var(--fs-hero) * -0.5);
+    }
+    .hero__frase {
+      max-width: 40ch;
+    }
+  }
+
+  /* ---------- Computador: foto à direita com borda diagonal ---------- */
+  @media (min-width: 1024px) {
+    .hero {
+      justify-content: flex-end;
+    }
+    .hero__foto {
+      position: absolute;
+      inset: 0 0 0 34%;
+      height: auto;
+      clip-path: polygon(18% 0, 100% 0, 100% 100%, 0 100%);
+    }
+    .hero__foto::after {
+      background:
+        linear-gradient(90deg, rgb(11 14 26 / 0.65) 0%, rgb(11 14 26 / 0) 40%),
+        linear-gradient(0deg, rgb(11 14 26 / 0.75) 0%, rgb(11 14 26 / 0) 40%);
+    }
+    .hero__foto-movel :global(img) {
+      object-position: 58% 70%;
+    }
+    .hero__conteudo {
+      margin-top: 0;
+      padding-top: 6rem;
+      padding-bottom: clamp(12rem, 22svh, 15rem);
+    }
+    .hero__palavra {
+      font-size: clamp(8rem, min(20vw, 34svh), 21rem);
+    }
+    .hero__linha2 {
+      font-size: clamp(3.5rem, min(6.5vw, 11svh), 7rem);
+    }
+  }
+
+  /* ---------- Entrada de impacto (só para quem não pediu menos movimento) ---------- */
+  @media (prefers-reduced-motion: no-preference) {
+    .hero__letra {
+      animation: letra-impacto 0.62s var(--ease-choque) both;
+      animation-delay: calc(0.34s + var(--i) * 0.05s);
+    }
+    .hero__palavra {
+      animation: tremor 0.34s linear 0.78s both;
+    }
+    .hero__descarga {
+      animation:
+        raio-cai 0.16s var(--ease-tensao) 0.08s both,
+        descarga-some 0.75s steps(1, end) 0.24s both;
+    }
+    .hero__cauda {
+      animation:
+        cauda-surge 0.22s var(--ease-choque) 0.76s both,
+        raio-pisca 0.6s steps(1, end) 0.98s both;
+    }
+    .hero__flash {
+      animation: flash 0.55s ease-out 0.3s both;
+    }
+    .hero__cortina {
+      animation: cortina 1.05s var(--ease-choque) 0.28s both;
+    }
+    .hero__linha2,
+    .hero__frase,
+    .hero__acoes {
+      animation: subir 0.7s var(--ease-choque) both;
+    }
+    .hero__linha2 {
+      animation-delay: 0.7s;
+    }
+    .hero__frase {
+      animation-delay: 0.82s;
+    }
+    .hero__acoes {
+      animation-delay: 0.92s;
+    }
+  }
+
+  @keyframes letra-impacto {
+    from {
+      transform: translateY(108%) rotate(var(--giro));
+    }
+    to {
+      transform: none;
+    }
+  }
+  @keyframes tremor {
+    0% { transform: translate(0, 0); }
+    20% { transform: translate(-7px, 2px); }
+    40% { transform: translate(6px, -2px); }
+    60% { transform: translate(-4px, 1px); }
+    80% { transform: translate(2px, 0); }
+    100% { transform: none; }
+  }
+  @keyframes raio-cai {
+    from {
+      opacity: 1;
+      transform: scaleY(0);
+    }
+    to {
+      opacity: 1;
+      transform: scaleY(1);
+    }
+  }
+  @keyframes descarga-some {
+    0% { opacity: 1; }
+    20% { opacity: 0.3; }
+    35% { opacity: 1; }
+    55% { opacity: 0.6; }
+    75% { opacity: 0.15; }
+    100% { opacity: 0; visibility: hidden; }
+  }
+  @keyframes cauda-surge {
+    from {
+      transform: rotate(-8deg) scale(0);
+    }
+    to {
+      transform: rotate(-8deg) scale(1);
+    }
+  }
+  @keyframes raio-pisca {
+    0% { opacity: 1; }
+    15% { opacity: 0.2; }
+    30% { opacity: 1; }
+    45% { opacity: 0.45; }
+    60%, 100% { opacity: 1; }
+  }
+  @keyframes flash {
+    0% { opacity: 0; }
+    16% { opacity: 0.5; }
+    100% { opacity: 0; }
+  }
+  @keyframes cortina {
+    from {
+      transform: translateX(0) skewX(-14deg);
+    }
+    to {
+      transform: translateX(120%) skewX(-14deg);
+    }
+  }
+  @keyframes subir {
+    from {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+</style>

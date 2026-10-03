@@ -1,0 +1,356 @@
+---
+// Barra fixa do topo + menu em tela cheia (um <dialog>, acessível por teclado).
+import { Picture } from 'astro:assets';
+import escudo from '../assets/marca/escudo.png';
+import Icone from './Icone.astro';
+import Botao from './Botao.astro';
+import { linkWhatsapp, linkInstagram, whatsappPronto } from '../lib/dados';
+
+// Itens do menu: [âncora, texto]. A ordem segue a página.
+const itens: Array<[string, string]> = [
+  ['#lacrosse', 'O que é lacrosse'],
+  ['#choque', 'O Choque'],
+  ['#entrar', 'Como entrar'],
+  ['#agenda', 'Agenda'],
+  ['#elenco', 'Elenco'],
+  ['#resultados', 'Resultados'],
+  ['#galeria', 'Galeria'],
+  ['#apoie', 'Apoie o Choque'],
+  ['#contato', 'Contato'],
+];
+const instagram = linkInstagram();
+---
+
+<header class="topo" data-topo>
+  <div class="topo__barra container">
+    <a class="topo__marca" href="#topo">
+      <Picture
+        src={escudo}
+        formats={['avif', 'webp']}
+        widths={[44, 88, 132]}
+        sizes="44px"
+        alt=""
+        class="topo__escudo"
+        loading="eager"
+      />
+      <span class="topo__nome" translate="no">Choque</span>
+      <span class="sr-only">Lacrosse, voltar ao início</span>
+    </a>
+
+    <div class="topo__acoes">
+      <a class="topo__cta" href="#entrar"><span class="topo__cta-extra">Quero</span> treinar</a>
+      <button
+        class="topo__menu"
+        type="button"
+        aria-haspopup="dialog"
+        aria-expanded="false"
+        aria-controls="menu"
+        data-abrir-menu
+      >
+        <span class="topo__hamburguer" aria-hidden="true"><span></span><span></span></span>
+        <span class="topo__menu-texto">Menu</span>
+      </button>
+    </div>
+  </div>
+  <div class="topo__voltagem" aria-hidden="true" data-voltagem></div>
+</header>
+
+<dialog class="menu" id="menu" aria-labelledby="menu-titulo" data-menu>
+  <div class="menu__miolo container">
+    <div class="menu__cabeca">
+      <h2 class="sr-only" id="menu-titulo">Menu</h2>
+      <button class="menu__fechar" type="button" data-fechar-menu>
+        <Icone nome="fechar" tamanho={28} />
+        <span class="sr-only">Fechar menu</span>
+      </button>
+    </div>
+    <nav aria-label="Seções da página">
+      <ul class="menu__lista" role="list">
+        {
+          itens.map(([href, texto]) => (
+            <li class="menu__item">
+              <a class="menu__link" href={href}>
+                <span class="menu__texto">{texto}</span>
+                <Icone nome="raio" class="menu__raio" tamanho={36} />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+    <div class="menu__rodape">
+      <Botao href={linkWhatsapp()} icone={whatsappPronto() ? 'whatsapp' : 'raio'} dica={whatsappPronto() ? '(abre o WhatsApp)' : ''}>
+        Venha treinar com a gente
+      </Botao>
+      {
+        instagram && (
+          <a class="link-forte" href={instagram} target="_blank" rel="noopener">
+            <Icone nome="instagram" /> Instagram
+          </a>
+        )
+      }
+    </div>
+  </div>
+  <div class="menu__zebra zebrado" aria-hidden="true"></div>
+</dialog>
+
+<style>
+  .topo {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 50;
+    padding-top: env(safe-area-inset-top);
+    transition: background-color var(--medio) ease;
+  }
+  /* Sombra escura no topo para o menu ficar legível sobre a foto */
+  .topo::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 -2.5rem;
+    z-index: -1;
+    background: linear-gradient(180deg, rgb(11 14 26 / 0.85), rgb(11 14 26 / 0));
+    pointer-events: none;
+    transition: opacity var(--medio) ease;
+  }
+  .topo.is-solido {
+    background-color: var(--noite);
+  }
+  .topo.is-solido::before {
+    opacity: 0;
+  }
+
+  .topo__barra {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    height: 4rem;
+  }
+
+  .topo__marca {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    min-height: 44px;
+    text-decoration: none;
+  }
+  .topo__marca :global(.topo__escudo) {
+    width: 2.375rem;
+    height: auto;
+  }
+  .topo__nome {
+    font-family: var(--t-titulo);
+    font-weight: 900;
+    font-size: 1.75rem;
+    line-height: 1;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+    color: var(--giz);
+  }
+
+  .topo__acoes {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .topo__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25em;
+    min-height: 44px;
+    padding: 0.55rem 0.9rem 0.5rem;
+    background: var(--amarelo);
+    color: var(--noite);
+    font-family: var(--t-titulo);
+    font-weight: 800;
+    font-size: 1.125rem;
+    line-height: 1;
+    text-transform: uppercase;
+    text-decoration: none;
+    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+    transition: background-color var(--rapido) ease;
+  }
+  .topo__cta:hover {
+    background: var(--giz);
+  }
+  .topo__cta:focus-visible {
+    clip-path: none;
+  }
+
+  .topo__menu {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    min-width: 44px;
+    min-height: 44px;
+    padding-inline: 0.5rem;
+    color: var(--giz);
+    font-family: var(--t-titulo);
+    font-weight: 800;
+    font-size: 1.125rem;
+    text-transform: uppercase;
+  }
+  /* No celular o texto "Menu" fica só para leitores de tela */
+  .topo__menu-texto {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .topo__cta-extra {
+    display: none;
+  }
+  .topo__hamburguer {
+    display: grid;
+    gap: 6px;
+    width: 26px;
+  }
+  .topo__hamburguer span {
+    display: block;
+    height: 3px;
+    background: currentColor;
+    transition: transform var(--medio) var(--ease-choque);
+  }
+  .topo__hamburguer span:last-child {
+    width: 70%;
+    justify-self: end;
+  }
+  .topo__menu:hover .topo__hamburguer span:last-child {
+    transform: scaleX(1.43);
+    transform-origin: right;
+  }
+
+  /* Barra de "voltagem": mostra quanto da página já foi lida */
+  .topo__voltagem {
+    height: 3px;
+    background: var(--amarelo);
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+
+  @media (min-width: 640px) {
+    .topo__menu-texto {
+      position: static;
+      width: auto;
+      height: auto;
+      overflow: visible;
+      clip-path: none;
+    }
+    .topo__cta-extra {
+      display: inline;
+    }
+    .topo__cta {
+      font-size: 1.25rem;
+      padding-inline: 1.1rem;
+    }
+  }
+
+  /* ---------- Menu em tela cheia ---------- */
+  .menu {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: var(--noite);
+    color: var(--giz);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+  .menu::backdrop {
+    background: rgb(11 14 26 / 0.7);
+  }
+  .menu[open] {
+    display: flex;
+    flex-direction: column;
+  }
+  .menu__miolo {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 2rem;
+  }
+  .menu__cabeca {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    height: 4rem;
+    padding-top: env(safe-area-inset-top);
+  }
+  .menu__fechar {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    color: var(--giz);
+  }
+  .menu__lista {
+    display: grid;
+    gap: 0.15rem;
+    margin-block: 1rem 2.5rem;
+  }
+  .menu__item {
+    overflow: clip;
+  }
+  .menu__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    padding-block: 0.1em;
+    font-family: var(--t-titulo);
+    font-weight: 900;
+    font-size: clamp(2.6rem, 11vw, 5.5rem);
+    line-height: 0.95;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--giz);
+    transition: color var(--rapido) ease;
+  }
+  .menu__link :global(.menu__raio) {
+    color: var(--amarelo);
+    opacity: 0;
+    transform: translateX(-12px) scale(0.6);
+    transition:
+      opacity var(--rapido) ease,
+      transform var(--medio) var(--ease-choque);
+  }
+  .menu__link:hover,
+  .menu__link:focus-visible {
+    color: var(--amarelo);
+  }
+  .menu__link:hover :global(.menu__raio),
+  .menu__link:focus-visible :global(.menu__raio) {
+    opacity: 1;
+    transform: none;
+  }
+  .menu__rodape {
+    margin-top: auto;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 2rem;
+  }
+  .menu__zebra {
+    height: 18px;
+    flex: none;
+  }
+  :global(html.menu-aberto) {
+    overflow: hidden;
+  }
+  /* Sem JavaScript o menu não abre: esconde o botão (a página é uma só e rola normal) */
+  :global(html:not(.js)) .topo__menu {
+    display: none;
+  }
+</style>
+
+<script>
+  import { abrirMenu } from '../scripts/menu';
+  abrirMenu();
+</script>

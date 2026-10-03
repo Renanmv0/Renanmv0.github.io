@@ -1,0 +1,318 @@
+---
+// "Do zero ao primeiro treino": passo a passo para quem quer começar,
+// como é um treino e perguntas frequentes (src/data/perguntas.json).
+import Corte from './Corte.astro';
+import Ph from './Ph.astro';
+import Botao from './Botao.astro';
+import { time, perguntas, linkWhatsapp, whatsappPronto } from '../lib/dados';
+
+const { treino } = time;
+// "Roupa de treino, chuteira ou tênis e água" (só a primeira palavra fica maiúscula)
+const minuscula = (t: string) => t.charAt(0).toLowerCase() + t.slice(1);
+const listar = (itens: readonly string[]) => {
+  const lista = itens.map((t, i) => (i === 0 ? t : minuscula(t)));
+  return lista.length > 1 ? `${lista.slice(0, -1).join(', ')} e ${lista.at(-1)}` : (lista[0] ?? '');
+};
+
+const passos = [
+  {
+    titulo: 'Chama a gente no WhatsApp',
+    texto: 'Conta seu nome, sua idade e se já praticou algum esporte. A gente responde com o próximo treino.',
+  },
+  {
+    titulo: 'Vem para o treino experimental',
+    texto: `${treino.dias}, ${treino.horario}, no ${treino.local}. ${treino.chegada}`,
+    confirmar: !treino.confirmado,
+  },
+  {
+    titulo: 'Traga só o básico',
+    texto: `${listar(treino.levar)}. ${listar(treino.emprestamos)} ficam por nossa conta.`,
+  },
+  {
+    titulo: 'Pronto: você está na corrente',
+    texto: 'Gostou? É só voltar no próximo treino. A cada semana você pega mais o jeito do taco e do jogo.',
+  },
+];
+
+const fasesTreino = [
+  { nome: 'Aquecimento e fundamentos', texto: 'Passe, recepção e movimentação com o taco.' },
+  { nome: 'Exercícios táticos', texto: 'Jogadas de ataque e defesa, situações de jogo.' },
+  { nome: 'Coletivo', texto: 'Jogo-treino para colocar tudo em prática.' },
+];
+---
+
+<section class="secao entrar" id="entrar" aria-labelledby="entrar-titulo">
+  <Corte posicao="topo" cor="var(--noite)" />
+
+  <div class="container">
+    <h2 class="titulo-secao" id="entrar-titulo" data-titulo>
+      <span class="linha contorno">Do zero ao</span>
+      <span class="linha">primeiro treino</span>
+    </h2>
+    <p class="abre entrar__abre" data-surge>
+      Ninguém nasce sabendo jogar lacrosse. No Brasil, quase todo mundo começa sem nunca ter pegado num taco, e tudo bem.
+    </p>
+
+    <div class="passos-caixa" data-fio>
+    <span class="passos__fio" aria-hidden="true"><span class="passos__carga" data-fio-carga></span></span>
+    <ol class="passos" role="list">
+      {
+        passos.map((passo, i) => (
+          <li class="passo" data-surge>
+            <span class="passo__numero tabular" aria-hidden="true">{i + 1}</span>
+            <h3 class="passo__titulo">
+              <span class="sr-only">Passo {i + 1}: </span>
+              {passo.titulo}
+            </h3>
+            <p class="passo__texto">
+              <Ph texto={passo.texto} />
+              {passo.confirmar && <span class="selo-confirmar">[confirmar]</span>}
+            </p>
+          </li>
+        ))
+      }
+    </ol>
+    </div>
+
+    <div class="entrar__acoes" data-surge>
+      <Botao href={linkWhatsapp()} icone={whatsappPronto() ? 'whatsapp' : 'raio'} dica={whatsappPronto() ? '(abre o WhatsApp)' : ''}>
+        Venha treinar com a gente
+      </Botao>
+      <a class="link-forte" href="#agenda">Ver a agenda</a>
+    </div>
+
+    <div class="treino" data-surge>
+      <h3 class="treino__titulo">Como é um treino</h3>
+      <ol class="treino__barra" role="list">
+        {
+          fasesTreino.map((fase) => (
+            <li class="treino__fase">
+              <strong>{fase.nome}</strong>
+              <span>{fase.texto}</span>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+
+    <div class="duvidas">
+      <h3 class="duvidas__titulo" data-surge>Perguntas de quem está chegando</h3>
+      <div class="duvidas__lista">
+        {
+          perguntas.map((item) => (
+            <details class="duvida" data-surge>
+              <summary>
+                <span>{item.pergunta}</span>
+                <span class="duvida__sinal" aria-hidden="true" />
+              </summary>
+              <p>
+                <Ph texto={item.resposta} />
+              </p>
+            </details>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .entrar {
+    padding-bottom: calc(var(--secao) + var(--corte));
+  }
+  .entrar__abre {
+    margin-top: 1.25rem;
+  }
+
+  /* ---------- Passos ligados por um fio que "carrega" com a rolagem ---------- */
+  .passos-caixa {
+    position: relative;
+    margin-top: clamp(3rem, 8vw, 5rem);
+  }
+  .passos {
+    display: grid;
+    gap: 2.5rem;
+    padding-left: 4.75rem;
+    list-style: none;
+  }
+  .passos__fio {
+    position: absolute;
+    top: 0.5rem;
+    bottom: 0.5rem;
+    left: 1.6rem;
+    width: 3px;
+    background: var(--noite-3);
+  }
+  .passos__carga {
+    position: absolute;
+    inset: 0;
+    background: var(--amarelo);
+    box-shadow: 0 0 12px rgb(255 224 46 / 0.6);
+    transform-origin: top;
+  }
+  .passo {
+    position: relative;
+  }
+  .passo__numero {
+    position: absolute;
+    top: -0.15em;
+    left: calc(-4.75rem + 0.2rem);
+    display: grid;
+    place-items: center;
+    width: 3.2rem;
+    height: 3.6rem;
+    background: var(--noite);
+    border: 3px solid var(--amarelo);
+    color: var(--amarelo);
+    font-family: var(--t-numero);
+    font-weight: 900;
+    font-size: 2.4rem;
+    line-height: 1;
+    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
+  }
+  .passo__titulo {
+    font-size: var(--fs-h3);
+  }
+  .passo__texto {
+    margin-top: 0.5rem;
+    color: rgb(241 242 246 / 0.88);
+  }
+
+  .entrar__acoes {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 1.75rem;
+    margin-top: 3rem;
+  }
+
+  /* ---------- Barra "como é um treino" ---------- */
+  .treino {
+    margin-top: clamp(4rem, 10vw, 6.5rem);
+  }
+  .treino__titulo,
+  .duvidas__titulo {
+    font-size: var(--fs-h3);
+    margin-bottom: 1.25rem;
+  }
+  .treino__barra {
+    display: grid;
+    gap: 3px;
+    list-style: none;
+    padding: 0;
+  }
+  .treino__fase {
+    display: grid;
+    gap: 0.2rem;
+    padding: 1rem 1.1rem;
+    background: var(--noite-2);
+    border-left: 6px solid var(--amarelo);
+  }
+  .treino__fase:nth-child(2) {
+    border-left-color: rgb(255 224 46 / 0.65);
+  }
+  .treino__fase:nth-child(3) {
+    border-left-color: var(--giz);
+  }
+  .treino__fase strong {
+    font-family: var(--t-titulo);
+    font-weight: 900;
+    font-size: 1.5rem;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+  .treino__fase span {
+    font-size: var(--fs-pequeno);
+    color: var(--nevoa);
+  }
+
+  /* ---------- Perguntas frequentes ---------- */
+  .duvidas {
+    margin-top: clamp(4rem, 10vw, 6.5rem);
+  }
+  .duvidas__lista {
+    border-top: 1px solid var(--noite-3);
+  }
+  .duvida {
+    border-bottom: 1px solid var(--noite-3);
+  }
+  .duvida summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    min-height: 3.5rem;
+    padding-block: 1rem;
+    cursor: pointer;
+    list-style: none;
+    font-weight: 700;
+    font-size: 1.125rem;
+    line-height: 1.3;
+  }
+  .duvida summary::-webkit-details-marker {
+    display: none;
+  }
+  .duvida summary:hover {
+    color: var(--amarelo);
+  }
+  .duvida__sinal {
+    position: relative;
+    flex: none;
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+  .duvida__sinal::before,
+  .duvida__sinal::after {
+    content: '';
+    position: absolute;
+    inset: calc(50% - 1.5px) 0 auto;
+    height: 3px;
+    background: var(--amarelo);
+    transition: transform var(--medio) var(--ease-choque);
+  }
+  .duvida__sinal::after {
+    transform: rotate(90deg);
+  }
+  .duvida[open] .duvida__sinal::after {
+    transform: rotate(0deg);
+  }
+  .duvida p {
+    padding-bottom: 1.25rem;
+    color: rgb(241 242 246 / 0.88);
+  }
+
+  @media (min-width: 900px) {
+    .passos {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 2rem;
+      padding-left: 0;
+      padding-top: 5.5rem;
+    }
+    .passo__titulo {
+      font-size: clamp(1.6rem, 2.4vw, 2.2rem);
+    }
+    .passos__fio {
+      top: 1.75rem;
+      bottom: auto;
+      left: 1.6rem;
+      right: 0;
+      width: auto;
+      height: 3px;
+    }
+    .passos__carga {
+      transform-origin: left;
+    }
+    .passo__numero {
+      top: -5.5rem;
+      left: 0;
+    }
+    .treino__barra {
+      grid-template-columns: 1.1fr 1fr 1.2fr;
+    }
+    .duvidas {
+      display: grid;
+      grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.4fr);
+      gap: 3rem;
+    }
+  }
+</style>

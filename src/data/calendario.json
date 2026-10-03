@@ -1,0 +1,8 @@
+{
+  "_leia": "Jogos, treinos especiais e eventos. data no formato AAAA-MM-DD. hora no formato HH:MM (ou \"\" se não tiver). tipo: jogo, treino ou evento. Eventos com data passada saem da lista sozinhos — lembre de lançar o placar em resultados.json.",
+  "eventos": [
+    { "data": "2026-10-17", "hora": "09:00", "tipo": "treino", "titulo": "Treino aberto para iniciantes", "local": "Centro Esportivo Tietê", "detalhes": "[CONFIRMAR DATA]" },
+    { "data": "2026-11-07", "hora": "10:00", "tipo": "jogo", "titulo": "Choque × [ADVERSÁRIO]", "local": "[LOCAL DO JOGO]", "detalhes": "" },
+    { "data": "2026-11-28", "hora": "", "tipo": "evento", "titulo": "[TORNEIO OU EVENTO]", "local": "[LOCAL]", "detalhes": "[DETALHES DO EVENTO]" }
+  ]
+}

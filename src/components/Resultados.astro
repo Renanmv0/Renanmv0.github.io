@@ -1,0 +1,259 @@
+---
+// "Placar e conquistas" (src/data/resultados.json).
+// Vitória, empate ou derrota é calculado sozinho a partir do placar.
+import Corte from './Corte.astro';
+import Ph from './Ph.astro';
+import { time, resultados, formatarData } from '../lib/dados';
+
+const jogos = [...resultados.jogos].sort((a, b) => b.data.localeCompare(a.data));
+const conquistas = [...resultados.conquistas].sort((a, b) => b.ano - a.ano);
+
+function situacao(nos: number | null, eles: number | null) {
+  if (nos === null || eles === null) return { sigla: '?', nome: 'Placar a lançar', classe: 'aberto' };
+  if (nos > eles) return { sigla: 'V', nome: 'Vitória', classe: 'vitoria' };
+  if (nos < eles) return { sigla: 'D', nome: 'Derrota', classe: 'derrota' };
+  return { sigla: 'E', nome: 'Empate', classe: 'empate' };
+}
+const placar = (n: number | null) => (n === null ? '–' : String(n));
+---
+
+<section class="secao resultados" id="resultados" aria-labelledby="resultados-titulo">
+  <Corte posicao="topo" cor="var(--noite-2)" forma={2} />
+
+  <div class="container resultados__grade">
+    <div>
+      <h2 class="titulo-secao" id="resultados-titulo" data-titulo>
+        <span class="linha estencil">Placar</span>
+        <span class="linha resultados__ouro">e conquistas</span>
+      </h2>
+
+      {
+        jogos.length > 0 ? (
+          <ol class="jogos" role="list">
+            {jogos.map((j) => {
+              const s = situacao(j.placarChoque, j.placarAdversario);
+              return (
+                <li class:list={['jogo', `jogo--${s.classe}`]} data-surge>
+                  <p class="jogo__meta">
+                    <time datetime={j.data}>{formatarData(j.data, { day: 'numeric', month: 'short', year: 'numeric' })}</time>
+                    {j.competicao && (
+                      <span class="jogo__competicao">
+                        <Ph texto={j.competicao} />
+                      </span>
+                    )}
+                  </p>
+                  <div class="jogo__placar tabular">
+                    <span class="jogo__time" translate="no">
+                      {time.nome.split(' ')[0]}
+                    </span>
+                    <span class="jogo__gol">{placar(j.placarChoque)}</span>
+                    <span class="jogo__time jogo__time--adv">
+                      <Ph texto={j.adversario} />
+                    </span>
+                    <span class="jogo__gol">{placar(j.placarAdversario)}</span>
+                  </div>
+                  <p class="jogo__situacao" title={s.nome}>
+                    <span aria-hidden="true">{s.sigla}</span>
+                    <span class="sr-only">{s.nome}</span>
+                  </p>
+                </li>
+              );
+            })}
+          </ol>
+        ) : (
+          <p class="resultados__vazio">O primeiro placar oficial vem aí. Acompanhe os jogos na agenda.</p>
+        )
+      }
+    </div>
+
+    <div class="conquistas-caixa">
+      <h3 class="conquistas__titulo">Conquistas</h3>
+      {
+        conquistas.length > 0 ? (
+          <ol class="conquistas" role="list">
+            {conquistas.map((c) => (
+              <li class="conquista" data-surge>
+                <span class="conquista__ano tabular">{c.ano}</span>
+                <div>
+                  <h4 class="conquista__nome">
+                    <Ph texto={c.titulo} />
+                  </h4>
+                  {c.descricao && (
+                    <p class="conquista__texto">
+                      <Ph texto={c.descricao} />
+                    </p>
+                  )}
+                </div>
+              </li>
+            ))}
+          </ol>
+        ) : (
+          <p class="resultados__vazio">A primeira taça ainda vai ter lugar aqui.</p>
+        )
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .resultados {
+    background: var(--noite-2);
+    padding-bottom: calc(var(--secao) + var(--corte));
+  }
+  .resultados__ouro {
+    color: var(--ouro);
+    font-size: 0.62em;
+  }
+  .resultados__grade {
+    display: grid;
+    gap: clamp(3.5rem, 9vw, 6rem);
+  }
+
+  /* ---------- Placar ---------- */
+  .jogos {
+    display: grid;
+    gap: 0.75rem;
+    margin-top: clamp(2.5rem, 6vw, 3.5rem);
+    list-style: none;
+    padding: 0;
+  }
+  .jogo {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0.6rem 1rem;
+    align-items: center;
+    padding: 1rem 1.1rem;
+    background: var(--noite);
+    border-left: 6px solid var(--noite-3);
+  }
+  .jogo--vitoria {
+    border-left-color: var(--amarelo);
+  }
+  .jogo--empate {
+    border-left-color: var(--giz);
+  }
+  .jogo__meta {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.9rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--nevoa);
+  }
+  /* Placar no formato de TV: um time por linha, gols à direita */
+  .jogo__placar {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.4rem 1rem;
+    min-width: 0;
+  }
+  .jogo__time {
+    font-family: var(--t-titulo);
+    font-weight: 900;
+    font-size: clamp(1.4rem, 5vw, 1.9rem);
+    line-height: 1;
+    text-transform: uppercase;
+    overflow-wrap: break-word;
+    min-width: 0;
+  }
+  .jogo__time--adv {
+    color: var(--nevoa);
+  }
+  .jogo__gol {
+    display: grid;
+    place-items: center;
+    min-width: 2.75rem;
+    height: 2.75rem;
+    padding-inline: 0.3rem;
+    background: var(--noite-2);
+    border: 2px solid var(--noite-3);
+    font-family: var(--t-numero);
+    font-weight: 900;
+    font-size: 1.9rem;
+    line-height: 1;
+    color: var(--amarelo);
+  }
+  .jogo__situacao {
+    align-self: stretch;
+    display: grid;
+    place-items: center;
+    width: 2.6rem;
+    min-height: 2.6rem;
+    font-family: var(--t-titulo);
+    font-weight: 900;
+    font-size: 1.5rem;
+    background: var(--noite-3);
+    color: var(--giz);
+  }
+  .jogo--vitoria .jogo__situacao {
+    background: var(--amarelo);
+    color: var(--noite);
+  }
+  .jogo--empate .jogo__situacao {
+    background: var(--giz);
+    color: var(--noite);
+  }
+
+  /* ---------- Conquistas em ouro (a cor do escudo) ---------- */
+  .conquistas__titulo {
+    font-size: var(--fs-h3);
+    color: var(--ouro);
+  }
+  .conquistas {
+    position: relative;
+    display: grid;
+    gap: 2rem;
+    margin-top: 1.75rem;
+    padding-left: 1.5rem;
+    border-left: 3px solid var(--ouro);
+    list-style: none;
+  }
+  .conquista {
+    position: relative;
+    display: grid;
+    gap: 0.4rem;
+  }
+  .conquista::before {
+    content: '';
+    position: absolute;
+    left: calc(-1.5rem - 9px);
+    top: 0.55rem;
+    width: 15px;
+    height: 15px;
+    background: var(--ouro);
+    transform: rotate(45deg);
+  }
+  .conquista__ano {
+    font-family: var(--t-numero);
+    font-weight: 900;
+    font-size: 2.6rem;
+    line-height: 0.9;
+    color: var(--ouro);
+  }
+  .conquista__nome {
+    font-size: clamp(1.5rem, 5vw, 2rem);
+  }
+  .conquista__texto {
+    margin-top: 0.25rem;
+    color: var(--nevoa);
+  }
+  .conquista :global(.ph) {
+    color: var(--ouro);
+  }
+  .resultados__vazio {
+    margin-top: 1.5rem;
+    color: var(--nevoa);
+  }
+
+  @media (min-width: 1024px) {
+    .resultados__grade {
+      grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.9fr);
+      align-items: end;
+    }
+    .conquistas-caixa {
+      padding-bottom: 0.5rem;
+    }
+  }
+</style>

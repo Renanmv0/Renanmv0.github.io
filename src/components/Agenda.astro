@@ -1,0 +1,428 @@
+---
+// "Onde e quando": treino semanal em destaque (placa de advertência) e
+// próximos jogos e eventos (src/data/calendario.json).
+// Eventos que já passaram somem sozinhos da lista (conferido no navegador).
+import Corte from './Corte.astro';
+import Ph from './Ph.astro';
+import Icone from './Icone.astro';
+import { time, calendario, formatarData, ehPlaceholder } from '../lib/dados';
+
+const { treino } = time;
+const eventos = [...calendario].sort((a, b) => (a.data + a.hora).localeCompare(b.data + b.hora));
+const nomesTipo = { jogo: 'Jogo', treino: 'Treino', evento: 'Evento' } as const;
+// "09:00" -> "9h" ; "15:30" -> "15h30"
+const formatarHora = (hora: string) => {
+  const [h, m] = hora.split(':');
+  return `${Number(h)}h${m === '00' ? '' : m}`;
+};
+
+// Link "Salvar na agenda" (Google Agenda), no fuso de São Paulo
+function linkAgenda(e: (typeof eventos)[number]) {
+  const dia = e.data.replaceAll('-', '');
+  let datas: string;
+  if (e.hora) {
+    const [h, m] = e.hora.split(':').map(Number);
+    const fim = `${String(Math.min(h + 2, 23)).padStart(2, '0')}${String(m).padStart(2, '0')}00`;
+    datas = `${dia}T${e.hora.replace(':', '')}00/${dia}T${fim}`;
+  } else {
+    const seguinte = new Date(`${e.data}T12:00:00Z`);
+    seguinte.setUTCDate(seguinte.getUTCDate() + 1);
+    datas = `${dia}/${seguinte.toISOString().slice(0, 10).replaceAll('-', '')}`;
+  }
+  const params = new URLSearchParams({
+    action: 'TEMPLATE',
+    text: e.titulo,
+    dates: datas,
+    ctz: 'America/Sao_Paulo',
+    details: `${e.detalhes ? e.detalhes + '. ' : ''}${time.nome}`,
+    location: e.local,
+  });
+  return `https://calendar.google.com/calendar/render?${params}`;
+}
+---
+
+<section class="secao agenda" id="agenda" aria-labelledby="agenda-titulo">
+  <Corte posicao="topo" cor="var(--noite-2)" forma={2} />
+
+  <div class="container agenda__grade">
+    <div class="agenda__cabeca">
+      <h2 class="titulo-secao agenda__titulo" id="agenda-titulo" data-titulo>Onde e quando</h2>
+
+      <article class="placa" aria-labelledby="placa-titulo" data-revela>
+        <span class="varredura varredura--noite" aria-hidden="true"></span>
+        <div class="placa__miolo">
+          <p class="placa__alerta">
+            <svg viewBox="0 0 100 92" aria-hidden="true" focusable="false">
+              <path d="M50 6 94 86H6Z" class="placa__triangulo"></path>
+              <path d="M53 42 38 66h11l-4 16 17-26H51l6-14z" class="placa__raio"></path>
+            </svg>
+            Atenção
+          </p>
+          <h3 class="placa__titulo" id="placa-titulo">Treino aberto para iniciantes</h3>
+          <dl class="placa__dados">
+            <div>
+              <dt><Icone nome="calendario" tamanho={20} /> Quando</dt>
+              <dd>
+                <Ph texto={treino.dias} />
+              </dd>
+            </div>
+            <div>
+              <dt><Icone nome="relogio" tamanho={20} /> Horário</dt>
+              <dd class="tabular">
+                <Ph texto={treino.horario} />
+              </dd>
+            </div>
+            <div>
+              <dt><Icone nome="mapa" tamanho={20} /> Onde</dt>
+              <dd>
+                <Ph texto={treino.local} />
+                {treino.endereco && (
+                  <span class="placa__endereco">
+                    <Ph texto={treino.endereco} />
+                  </span>
+                )}
+              </dd>
+            </div>
+          </dl>
+          <div class="placa__rodape">
+            <a class="placa__mapa" href={treino.linkMapa} target="_blank" rel="noopener">
+              Como chegar <Icone nome="externo" tamanho={18} />
+            </a>
+            {!treino.confirmado && <span class="selo-confirmar">[confirmar dias e horários]</span>}
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <div class="agenda__lista-caixa">
+      <h3 class="agenda__subtitulo">Próximos jogos e eventos</h3>
+      <ol class="eventos" role="list" data-eventos>
+        {
+          eventos.map((e) => (
+            <li class:list={['evento', `evento--${e.tipo}`]} data-data={e.data} data-surge>
+              <p class="evento__data" aria-hidden="true">
+                <span class="evento__dia tabular">{formatarData(e.data, { day: '2-digit' })}</span>
+                <span class="evento__mes">{formatarData(e.data, { month: 'short' }).replace('.', '')}</span>
+              </p>
+              <div class="evento__info">
+                <p class="evento__tipo">
+                  <span class="etiqueta">{nomesTipo[e.tipo]}</span>
+                  <span class="evento__proximo" hidden>
+                    Próximo
+                  </span>
+                </p>
+                <h4 class="evento__titulo">
+                  <Ph texto={e.titulo} />
+                </h4>
+                <p class="evento__quando">
+                  <time datetime={e.hora ? `${e.data}T${e.hora}-03:00` : e.data}>
+                    {formatarData(e.data, { weekday: 'long', day: 'numeric', month: 'long' })}
+                    {e.hora && `, ${formatarHora(e.hora)}`}
+                  </time>
+                </p>
+                {e.local && (
+                  <p class="evento__local">
+                    <Icone nome="mapa" tamanho={18} /> <Ph texto={e.local} />
+                  </p>
+                )}
+                {e.detalhes && (
+                  <p class="evento__detalhes">
+                    <Ph texto={e.detalhes} />
+                  </p>
+                )}
+                {!ehPlaceholder(e.titulo) && (
+                  <a class="evento__salvar" href={linkAgenda(e)} target="_blank" rel="noopener">
+                    <Icone nome="calendario" tamanho={18} /> Salvar na agenda
+                  </a>
+                )}
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+      <p class="agenda__vazia" data-eventos-vazio hidden>
+        Nenhum jogo marcado agora. O treino semanal continua de pé: é só aparecer.
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .agenda {
+    background: var(--noite-2);
+    padding-bottom: calc(var(--secao) + var(--corte));
+  }
+  .agenda__grade {
+    display: grid;
+    gap: clamp(3rem, 8vw, 5rem);
+  }
+  .agenda__titulo {
+    font-size: clamp(3rem, 11vw, 6rem);
+  }
+  .agenda__cabeca {
+    display: grid;
+    gap: 2.5rem;
+    align-content: start;
+  }
+
+  /* ---------- Placa do treino semanal ---------- */
+  .placa {
+    position: relative;
+    transform: rotate(-1.5deg);
+    max-width: 34rem;
+  }
+  .placa__miolo {
+    padding: 1.4rem 1.4rem 1.25rem;
+    background: var(--amarelo);
+    color: var(--noite);
+    border: 5px solid var(--noite);
+    outline: 3px solid var(--amarelo);
+    box-shadow: 10px 10px 0 rgb(0 0 0 / 0.35);
+  }
+  .placa__alerta {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: var(--t-titulo);
+    font-weight: 900;
+    font-size: 2.1rem;
+    line-height: 1;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .placa__alerta svg {
+    width: 2.6rem;
+    flex: none;
+  }
+  .placa__triangulo {
+    fill: var(--noite);
+    stroke: var(--noite);
+    stroke-width: 8;
+    stroke-linejoin: round;
+  }
+  .placa__raio {
+    fill: var(--amarelo);
+  }
+  .placa__titulo {
+    margin-top: 0.75rem;
+    font-size: clamp(1.9rem, 7vw, 2.6rem);
+  }
+  .placa__dados {
+    display: grid;
+    gap: 0.9rem;
+    margin-top: 1.25rem;
+    padding-top: 1rem;
+    border-top: 3px solid var(--noite);
+  }
+  .placa__dados dt {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+  .placa__dados dd {
+    margin: 0.1rem 0 0;
+    font-family: var(--t-titulo);
+    font-weight: 800;
+    font-size: 1.6rem;
+    line-height: 1.05;
+    text-transform: uppercase;
+  }
+  .placa__endereco {
+    display: block;
+    margin-top: 0.25rem;
+    font-family: var(--t-texto);
+    font-size: var(--fs-pequeno);
+    font-weight: 600;
+    text-transform: none;
+  }
+  .placa__rodape {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1rem;
+    margin-top: 1.25rem;
+  }
+  .placa__mapa {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-height: 44px;
+    padding: 0.5rem 1rem;
+    background: var(--noite);
+    color: var(--amarelo);
+    font-family: var(--t-titulo);
+    font-weight: 800;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+  .placa__mapa:hover {
+    background: var(--noite-3);
+  }
+  .placa__mapa:focus-visible {
+    outline-color: var(--noite);
+  }
+  .placa :global(.ph) {
+    color: var(--noite);
+    background: repeating-linear-gradient(-45deg, rgb(11 14 26 / 0.12) 0 6px, transparent 6px 12px);
+  }
+  .placa .selo-confirmar {
+    color: var(--noite);
+    margin-left: 0;
+  }
+
+  /* ---------- Lista de eventos ---------- */
+  .agenda__subtitulo {
+    font-size: var(--fs-h3);
+    margin-bottom: 1.25rem;
+  }
+  .eventos {
+    display: grid;
+    border-top: 2px solid var(--noite-3);
+    list-style: none;
+    padding: 0;
+  }
+  .evento {
+    display: grid;
+    grid-template-columns: 4.5rem 1fr;
+    gap: 1.1rem;
+    padding-block: 1.4rem;
+    border-bottom: 2px solid var(--noite-3);
+  }
+  .evento__data {
+    display: grid;
+    justify-items: center;
+    align-content: start;
+    padding-top: 0.2rem;
+    border-right: 3px solid var(--amarelo);
+    padding-right: 1rem;
+  }
+  .evento__dia {
+    font-family: var(--t-numero);
+    font-weight: 900;
+    font-size: 3.2rem;
+    line-height: 0.85;
+    color: var(--amarelo);
+  }
+  .evento__mes {
+    font-family: var(--t-titulo);
+    font-weight: 800;
+    font-size: 1.15rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .evento__info {
+    display: grid;
+    gap: 0.35rem;
+    min-width: 0;
+  }
+  .evento__tipo {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+  .evento--treino .etiqueta {
+    background: var(--giz);
+  }
+  .evento--evento .etiqueta {
+    background: var(--ouro);
+  }
+  .evento__proximo {
+    font-family: var(--t-titulo);
+    font-weight: 800;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--amarelo);
+  }
+  .evento__proximo::before {
+    content: '';
+    display: inline-block;
+    width: 0.55em;
+    height: 0.55em;
+    margin-right: 0.35em;
+    background: var(--amarelo);
+    border-radius: 50%;
+    box-shadow: 0 0 10px var(--amarelo);
+  }
+  .evento__titulo {
+    font-size: clamp(1.6rem, 5.5vw, 2.1rem);
+    overflow-wrap: anywhere;
+  }
+  .evento__quando {
+    font-weight: 600;
+  }
+  .evento__quando::first-letter {
+    text-transform: uppercase;
+  }
+  .evento__local,
+  .evento__detalhes {
+    display: flex;
+    gap: 0.4rem;
+    align-items: center;
+    font-size: var(--fs-pequeno);
+    color: var(--nevoa);
+  }
+  .evento__salvar {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    width: fit-content;
+    min-height: 44px;
+    font-size: var(--fs-pequeno);
+    font-weight: 700;
+    color: var(--amarelo);
+  }
+  .agenda__vazia {
+    padding: 1.5rem 0;
+    color: var(--nevoa);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .evento__proximo::before {
+      animation: piscar 1.6s steps(1, end) 3; /* para antes de 5 s */
+    }
+  }
+  @keyframes piscar {
+    50% {
+      opacity: 0.25;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .agenda__grade {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+      align-items: start;
+    }
+    .agenda__lista-caixa {
+      padding-top: 1rem;
+    }
+  }
+</style>
+
+<script>
+  // Esconde eventos que já passaram e destaca o próximo (data de São Paulo)
+  const hoje = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Sao_Paulo' }).format(new Date());
+  document.querySelectorAll<HTMLElement>('[data-eventos]').forEach((lista) => {
+    const itens = Array.from(lista.querySelectorAll<HTMLElement>('[data-data]'));
+    let primeiro = true;
+    for (const item of itens) {
+      if ((item.dataset.data ?? '') < hoje) {
+        item.hidden = true;
+        continue;
+      }
+      if (primeiro) {
+        item.querySelector<HTMLElement>('.evento__proximo')?.removeAttribute('hidden');
+        primeiro = false;
+      }
+    }
+    if (primeiro) {
+      lista.hidden = true;
+      lista.parentElement?.querySelector<HTMLElement>('[data-eventos-vazio]')?.removeAttribute('hidden');
+    }
+  });
+</script>
