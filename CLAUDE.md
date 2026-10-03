@@ -27,3 +27,6 @@ Site de página única do time Choque Lacrosse (São Paulo). Astro 7 + GSAP 3 (S
 - Placeholders sempre entre colchetes (`[PREENCHER]`): `Ph.astro` os marca com fita amarela. Informação não verificada leva `"confirmado": false`.
 - Não afirmar fatos não confirmados (ex.: "primeiro time do Brasil" foi removido porque não há comprovação). Lacrosse **volta** às Olimpíadas em LA 2028 (foi olímpico em 1904 e 1908); quem estreia é o formato sixes.
 - Antes de entregar mudanças visuais: `npm run build`, `npm run preview` e `npm run qa` sem violações; Lighthouse mobile ≥ 90.
+
+## Problemas conhecidos
+- Samsung Internet com modo escuro repinta o site (amarelo vira marrom, zigue-zague azul vira branco) e ignora o `color-scheme: dark`. `only dark` também não resolve: no Chromium, auto dark com preferência clara força a repintura (`SetUsedColorScheme` em `computed_style.cc`, igual desde a versão 110). Para simular: CDP `Emulation.setAutoDarkModeOverride` + `colorScheme: 'light'` no Playwright, medindo pixels em prints da tela (print de página inteira ou de elemento maior que a tela desliga o auto dark). Contorno testado e não aplicado: pintar o amarelo em negativo (`#001fd1`, texto `#f4f1e5`) e inverter com `filter: invert(1)`.

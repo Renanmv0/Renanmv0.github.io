@@ -177,6 +177,8 @@ Os dois primeiros usam o Playwright. Na primeira vez, rode `npx playwright insta
 
 Para medir velocidade e acessibilidade do site publicado, cole o endereço em <https://pagespeed.web.dev>.
 
+**O amarelo aparece marrom em algum celular Samsung?** É o modo escuro do navegador Samsung Internet, que repinta todos os sites por conta própria (não é defeito do site). Para ver as cores certas: menu ☰ → Configurações → Labs → ative "Usar tema escuro do site" (o nome pode variar um pouco conforme a versão), ou desligue o modo escuro do navegador.
+
 ---
 
 ## 6. O que ainda falta preencher
