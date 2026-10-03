@@ -1,6 +1,6 @@
 # Choque Lacrosse — notas para o Claude Code
 
-Site de página única do time Choque Lacrosse (São Paulo). Astro 7 + GSAP 3 (ScrollTrigger, SplitText). Público: iniciantes, famílias, atletas e patrocinadores. Idioma: português do Brasil.
+Site de página única do time Choque Lacrosse (São Paulo). Astro 7 + GSAP 3 (ScrollTrigger, SplitText). O Choque joga **sixes** (6 contra 6). Público: iniciantes, famílias, atletas e patrocinadores. Idioma: português do Brasil.
 
 ## Comandos
 - `npm run dev` (http://localhost:4321) · `npm run build` (gera `dist/`) · `npm run preview`

@@ -35,7 +35,16 @@ const pecas = [
     titulo: 'Os times',
     largo: true,
     texto:
-      'No campo masculino são 10 por time: goleiro (G), 3 na defesa (D), 3 no meio (M) e 3 no ataque (A). No feminino são 12. No sixes, formato que estreia nas Olimpíadas de Los Angeles\u00a02028, são 6.',
+      'No campo masculino são 10 por time: goleiro (G), 3 na defesa (D), 3 no meio (M) e 3 no ataque (A). No feminino são 12. É o formato tradicional, jogado em campo grande.',
+  },
+  {
+    arte: 'sixes',
+    selo: 'É o que jogamos',
+    fato: '6 contra 6',
+    titulo: 'O sixes',
+    largo: true,
+    texto:
+      'O formato do Choque, que estreia nas Olimpíadas de Los Angeles\u00a02028. São 5 na linha e 1 goleiro, todos atacam e defendem, e ninguém usa taco longo. O campo é menor (70\u00a0×\u00a036\u00a0m), cada ataque tem 30 segundos para finalizar e o jogo tem 4 tempos de 8 minutos. Depois de cada gol, o goleiro repõe a bola na hora: o jogo quase não para.',
   },
   {
     arte: 'capacete',
@@ -79,6 +88,7 @@ const pecas = [
               <div class="peca__arte">
                 <Ilustracao nome={peca.arte} />
               </div>
+              {'selo' in peca && <p class="peca__selo etiqueta">{peca.selo}</p>}
               <p class="peca__fato tabular">{peca.fato}</p>
               <h3 class="peca__titulo">{peca.titulo}</h3>
               <p class="peca__texto">{peca.texto}</p>
@@ -192,6 +202,10 @@ const pecas = [
     line-height: 1;
     color: var(--amarelo);
     text-transform: uppercase;
+  }
+  .peca__selo {
+    width: fit-content;
+    margin-bottom: 0.6rem;
   }
   .peca__titulo {
     margin-top: 0.4rem;

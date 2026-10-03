@@ -3,7 +3,7 @@
 // Substituem as fotos de equipamento de terceiros do site antigo.
 // São decorativas: o texto ao lado explica cada peça.
 interface Props {
-  nome: 'taco' | 'bola' | 'gol' | 'campo' | 'capacete';
+  nome: 'taco' | 'bola' | 'gol' | 'campo' | 'sixes' | 'capacete';
 }
 const { nome } = Astro.props;
 
@@ -27,7 +27,16 @@ const jogadores: Array<[number, number, string]> = [
   [292, 100, 'A'],
   [238, 142, 'A'],
 ];
-const viewBox = nome === 'campo' ? '0 0 320 200' : '0 0 240 220';
+// Sixes: 5 na linha + goleiro, todos sem posição fixa (time atacando para a direita)
+const jogadoresSixes: Array<[number, number, string]> = [
+  [53, 101, 'G'],
+  [196, 58, ''],
+  [196, 144, ''],
+  [224, 101, ''],
+  [246, 46, ''],
+  [288, 101, ''],
+];
+const viewBox = nome === 'campo' || nome === 'sixes' ? '0 0 320 200' : '0 0 240 220';
 ---
 
 <svg class:list={['ilustra', `ilustra--${nome}`]} viewBox={viewBox} aria-hidden="true" focusable="false">
@@ -113,6 +122,31 @@ const viewBox = nome === 'campo' ? '0 0 320 200' : '0 0 240 220';
     )
   }
   {
+    nome === 'sixes' && (
+      <>
+        {/* campo de 70 x 36 m, gols a 10 m do fundo, relógio de 30 s */}
+        <rect class="giz giz--forte" x="10" y="30" width="300" height="154" />
+        <line class="giz" x1="160" y1="30" x2="160" y2="184" />
+        <circle class="giz" cx="53" cy="107" r="12" />
+        <circle class="giz" cx="267" cy="107" r="12" />
+        <line class="traco" x1="47" y1="99" x2="47" y2="115" />
+        <line class="traco" x1="273" y1="99" x2="273" y2="115" />
+        <path class="giz giz--tracejado" d="M196 64C170 80 170 134 196 150" />
+        <path class="giz giz--tracejado" d="M224 107C236 80 244 60 246 52" />
+        {jogadoresSixes.map(([x, y, letra]) => (
+          <g class="ilustra__jogador">
+            <circle cx={x} cy={y + 6} r="11" />
+            {letra && <text x={x} y={y + 6.5}>{letra}</text>}
+          </g>
+        ))}
+        <g class="ilustra__relogio">
+          <rect x="128" y="2" width="64" height="22" />
+          <text x="160" y="13.5">30 s</text>
+        </g>
+      </>
+    )
+  }
+  {
     nome === 'capacete' && (
       <>
         <path class="traco traco--grosso" d="M62 112C62 58 92 30 120 30s58 28 58 82" />
@@ -182,6 +216,17 @@ const viewBox = nome === 'campo' ? '0 0 320 200' : '0 0 240 220';
     font-size: 15px;
     letter-spacing: 0.04em;
     text-anchor: middle;
+  }
+  .ilustra__relogio rect {
+    fill: var(--amarelo);
+  }
+  .ilustra__relogio text {
+    fill: var(--noite);
+    font-family: var(--t-numero);
+    font-weight: 900;
+    font-size: 15px;
+    text-anchor: middle;
+    dominant-baseline: central;
   }
   .ilustra__jogador circle {
     fill: var(--amarelo);
