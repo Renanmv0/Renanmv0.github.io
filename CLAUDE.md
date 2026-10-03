@@ -22,6 +22,7 @@ Site de página única do time Choque Lacrosse (São Paulo). Astro 7 + GSAP 3 (S
 - Movimento: descarga (entrada rápida com freio seco), corte (painel `.varredura` que revela), corrente (scrub ligado à rolagem), ligar (contadores piscando). Animar só transform e opacity. Revelações usam IntersectionObserver e opacidade (nunca `visibility`, para não tirar elementos da ordem do Tab).
 
 ## Regras
+- Tom: intenso e acolhedor, mas profissional. Evitar coloquialismos como "a gente", "pra/pro", "é só", "chama", "vem" (use "emprestamos", "fale conosco", "venha"). O CTA "Venha treinar com a gente" foi pedido pelo dono e fica.
 - Sem JavaScript ou com `prefers-reduced-motion`, todo o conteúdo precisa aparecer parado.
 - Placeholders sempre entre colchetes (`[PREENCHER]`): `Ph.astro` os marca com fita amarela. Informação não verificada leva `"confirmado": false`.
 - Não afirmar fatos não confirmados (ex.: "primeiro time do Brasil" foi removido porque não há comprovação). Lacrosse **volta** às Olimpíadas em LA 2028 (foi olímpico em 1904 e 1908); quem estreia é o formato sixes.

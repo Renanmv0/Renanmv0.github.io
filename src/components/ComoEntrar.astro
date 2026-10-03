@@ -16,11 +16,11 @@ const listar = (itens: readonly string[]) => {
 
 const passos = [
   {
-    titulo: 'Chama a gente no WhatsApp',
-    texto: 'Conta seu nome, sua idade e se já praticou algum esporte. A gente responde com o próximo treino.',
+    titulo: 'Fale conosco pelo WhatsApp',
+    texto: 'Informe seu nome, sua idade e se já praticou algum esporte. Respondemos com a data do próximo treino.',
   },
   {
-    titulo: 'Vem para o treino experimental',
+    titulo: 'Venha para o treino experimental',
     texto: `${treino.dias}, ${treino.horario}, no ${treino.local}. ${treino.chegada}`,
     confirmar: !treino.confirmado,
   },
@@ -30,7 +30,7 @@ const passos = [
   },
   {
     titulo: 'Pronto: você está na corrente',
-    texto: 'Gostou? É só voltar no próximo treino. A cada semana você pega mais o jeito do taco e do jogo.',
+    texto: 'Gostou? Continue nos treinos semanais: a cada semana você ganha mais domínio do taco e do jogo.',
   },
 ];
 
@@ -50,7 +50,7 @@ const fasesTreino = [
       <span class="linha">primeiro treino</span>
     </h2>
     <p class="abre entrar__abre" data-surge>
-      Ninguém nasce sabendo jogar lacrosse. No Brasil, quase todo mundo começa sem nunca ter pegado num taco, e tudo bem.
+      Ninguém nasce sabendo jogar lacrosse. No Brasil, quase todos começam sem nunca ter segurado um taco.
     </p>
 
     <div class="passos-caixa" data-fio>

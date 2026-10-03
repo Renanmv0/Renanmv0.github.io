@@ -1,8 +1,8 @@
 {
   "_leia": "Perguntas frequentes da seção Como entrar. Edite, apague ou acrescente blocos { \"pergunta\": ..., \"resposta\": ... }.",
   "perguntas": [
-    { "pergunta": "Preciso já ter jogado lacrosse?", "resposta": "Não. Os treinos são abertos para todos os níveis e a gente ensina os fundamentos desde o começo: segurar o taco, passar, receber e arremessar." },
-    { "pergunta": "Preciso comprar equipamento para começar?", "resposta": "Não. Para iniciantes, a gente empresta taco, luvas e capacete. Você só traz roupa de treino, chuteira ou tênis e água." },
+    { "pergunta": "Preciso já ter jogado lacrosse?", "resposta": "Não. Os treinos são abertos para todos os níveis e ensinamos os fundamentos desde o começo: segurar o taco, passar, receber e arremessar." },
+    { "pergunta": "Preciso comprar equipamento para começar?", "resposta": "Não. Para iniciantes, emprestamos taco, luvas e capacete. Basta trazer roupa de treino, chuteira ou tênis e água." },
     { "pergunta": "Mulheres podem jogar?", "resposta": "Sim, o lacrosse tem regras e competições femininas. [CONFIRMAR COMO O CHOQUE ORGANIZA OS TREINOS FEMININOS OU MISTOS]" },
     { "pergunta": "Tem idade mínima?", "resposta": "[PREENCHER IDADE MÍNIMA E REGRAS PARA MENORES DE IDADE]" },
     { "pergunta": "Quanto custa?", "resposta": "[PREENCHER: A AULA EXPERIMENTAL É GRATUITA? EXISTE MENSALIDADE?]" },

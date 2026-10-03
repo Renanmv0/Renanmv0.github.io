@@ -21,14 +21,14 @@ const ano = new Date().getFullYear();
 
   <div class="container">
     <h2 class="rodape__chamada" id="contato-titulo">
-      <span class="sr-only">Vem pro Choque</span>
-      <span class="linha contorno" aria-hidden="true" data-entrada-lateral="-14">Vem pro</span>
+      <span class="sr-only">Entre no Choque</span>
+      <span class="linha contorno" aria-hidden="true" data-entrada-lateral="-14">Entre no</span>
       <span class="linha rodape__choque" aria-hidden="true" data-entrada-lateral="14"><PalavraChoque /></span>
     </h2>
 
     <div class="rodape__grade">
       <div class="rodape__cta">
-        <p class="abre">Primeira vez? Chama no WhatsApp e a gente te encaixa no próximo treino.</p>
+        <p class="abre">Primeira vez? Envie uma mensagem pelo WhatsApp e indicamos o próximo treino.</p>
         <Botao href={linkWhatsapp()} icone={whatsappPronto() ? 'whatsapp' : 'raio'} dica={whatsappPronto() ? '(abre o WhatsApp)' : ''}>
           Venha treinar com a gente
         </Botao>

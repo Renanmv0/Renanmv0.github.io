@@ -6,7 +6,7 @@
   "estado": "SP",
   "fundacao": { "ano": 2023, "confirmado": false, "_leia": "O contador de anos de time é calculado sozinho a partir deste ano." },
 
-  "descricaoSeo": "Choque Lacrosse, time de lacrosse de São Paulo. Treinos abertos para iniciantes: a gente ensina do zero e empresta o equipamento. Venha treinar com a gente.",
+  "descricaoSeo": "Choque Lacrosse, time de lacrosse de São Paulo. Treinos abertos para iniciantes: ensinamos do zero e emprestamos o equipamento. Venha treinar com a gente.",
 
   "contato": {
     "_leia": "whatsapp: só números, com 55 + DDD (ex.: 5511987654321). instagram: o usuário sem @ (ex.: choquelacrosse).",
@@ -35,12 +35,12 @@
   ],
 
   "historia": [
-    "O Choque nasceu de um grupo de amigos que queria jogar lacrosse em São Paulo, mesmo com pouco equipamento e muita gente perguntando que esporte era aquele. Em [ANO DE FUNDAÇÃO], vieram os primeiros treinos.",
+    "O Choque nasceu de um grupo de amigos que queria jogar lacrosse em São Paulo, mesmo com pouco equipamento e muitas perguntas sobre que esporte era aquele. Em [ANO DE FUNDAÇÃO], vieram os primeiros treinos.",
     "Hoje o time treina no Centro Esportivo Tietê, disputa jogos e recebe quem nunca pegou num taco. A missão continua a mesma: espalhar o lacrosse pelo Brasil e mostrar a garra brasileira em campo."
   ],
 
   "valores": [
-    { "titulo": "Velocidade", "texto": "Jogo rápido pede cabeça rápida. A gente treina para decidir antes do adversário." },
+    { "titulo": "Velocidade", "texto": "Jogo rápido pede cabeça rápida. Treinamos para decidir antes do adversário." },
     { "titulo": "Impacto", "texto": "Entrega total em cada disputa de bola, sempre dentro das regras e com respeito." },
     { "titulo": "Corrente", "texto": "Ninguém joga sozinho. Quem chega novo entra na corrente desde o primeiro treino." }
   ],
