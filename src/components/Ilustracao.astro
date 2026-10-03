@@ -8,6 +8,9 @@ interface Props {
 const { nome } = Astro.props;
 
 // Rede do taco: linhas diagonais recortadas pelo formato da cabeça
+// Contorno da cabeça do taco (vista de frente, garganta em 0,0)
+const cabecaTaco =
+  'M-5 0V-12L-24-60C-29-74-31-88-30-98C-29-110-20-116 0-116C20-116 29-110 30-98C31-88 29-74 24-60L5-12V0Z';
 const redeA = Array.from({ length: 12 }, (_, i) => -96 + i * 12);
 const redeB = Array.from({ length: 12 }, (_, i) => -36 + i * 12);
 
@@ -33,22 +36,23 @@ const viewBox = nome === 'campo' ? '0 0 320 200' : '0 0 240 220';
       <>
         <defs>
           <clipPath id="cabeca-taco">
-            <path d="M-4 0V-10C-14-22-22-40-22-60C-22-72-18-80-18-88C-18-96-26-100-26-108C-26-116-14-120 0-116C14-120 26-116 26-108C26-100 18-96 18-88C18-80 22-72 22-60C22-40 14-22 4-10V0Z" />
+            <path d={cabecaTaco} />
           </clipPath>
         </defs>
-        <g transform="translate(128 124) rotate(34)">
+        {/* cabeça de frente: garganta estreita, laterais abrindo e boca larga em cima */}
+        <g transform="translate(118 122) rotate(30)">
           <g clip-path="url(#cabeca-taco)" class="giz">
             {redeA.map((x) => <line x1={x} y1="-120" x2={x + 60} y2="0" />)}
             {redeB.map((x) => <line x1={x} y1="-120" x2={x - 60} y2="0" />)}
           </g>
-          <path class="traco" d="M-4 0V-10C-14-22-22-40-22-60C-22-72-18-80-18-88C-18-96-26-100-26-108C-26-116-14-120 0-116C14-120 26-116 26-108C26-100 18-96 18-88C18-80 22-72 22-60C22-40 14-22 4-10V0Z" />
-          <line class="giz giz--forte" x1="-24" y1="-102" x2="24" y2="-102" />
-          <line class="traco traco--grosso" x1="0" y1="2" x2="0" y2="112" />
-          <line class="traco" x1="-6" y1="112" x2="6" y2="112" />
+          <path class="giz giz--forte" d="M-26 -98Q0 -93 26 -98M-28 -88Q0 -83 28 -88" />
+          {/* parede lateral de plástico (a borda dupla típica da cabeça de lacrosse) */}
+          <path class="giz giz--forte" d="M-6-17-21-56C-25-68-26-82-25-94M6-17 21-56C25-68 26-82 25-94" />
+          <circle class="traco traco--cheio" cx="0" cy="-42" r="9.5" />
+          <path class="traco" d={cabecaTaco} />
+          <line class="traco traco--grosso" x1="0" y1="2" x2="0" y2="100" />
+          <line class="traco" x1="-6" y1="100" x2="6" y2="100" />
         </g>
-        <circle class="traco traco--cheio" cx="206" cy="40" r="9" />
-        <line class="giz giz--forte" x1="214" y1="56" x2="232" y2="70" />
-        <line class="giz giz--forte" x1="200" y1="58" x2="212" y2="80" />
       </>
     )
   }
