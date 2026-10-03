@@ -90,13 +90,25 @@ function prepararContadores(animar: boolean) {
 }
 
 function iniciar() {
-  // Topo fica sólido depois que o hero começa a sair da tela
+  // Topo fica sólido depois que o hero começa a sair da tela (em qualquer ponto abaixo disso)
   const topo = document.querySelector<HTMLElement>('[data-topo]');
   if (topo) {
-    ScrollTrigger.create({
-      start: () => window.innerHeight * 0.25,
-      onToggle: (self) => topo.classList.toggle('is-solido', self.isActive),
-    });
+    let agendado = false;
+    const atualizarTopo = () => {
+      agendado = false;
+      topo.classList.toggle('is-solido', window.scrollY > window.innerHeight * 0.25);
+    };
+    window.addEventListener(
+      'scroll',
+      () => {
+        if (!agendado) {
+          agendado = true;
+          requestAnimationFrame(atualizarTopo);
+        }
+      },
+      { passive: true },
+    );
+    atualizarTopo();
   }
 
   const mm = gsap.matchMedia();
