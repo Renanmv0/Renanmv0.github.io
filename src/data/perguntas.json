@@ -2,10 +2,11 @@
   "_leia": "Perguntas frequentes da seção Como entrar. Edite, apague ou acrescente blocos { \"pergunta\": ..., \"resposta\": ... }.",
   "perguntas": [
     { "pergunta": "Preciso já ter jogado lacrosse?", "resposta": "Não. Os treinos são abertos para todos os níveis e ensinamos os fundamentos desde o começo: segurar o taco, passar, receber e arremessar." },
+    { "pergunta": "Tem aula experimental?", "resposta": "Não. Todos os treinos são abertos e gratuitos, então não existe aula experimental: entre no grupo do WhatsApp, confira onde será o treino de domingo e venha." },
+    { "pergunta": "Quanto custa?", "resposta": "Nada. Todos os treinos são gratuitos e não cobramos para participar. Todo o nosso material vem de doações do Brasil Lacrosse." },
     { "pergunta": "Preciso comprar equipamento para começar?", "resposta": "Não. Para iniciantes, emprestamos taco, luvas e capacete. Basta trazer roupa de treino, chuteira ou tênis e água." },
-    { "pergunta": "Mulheres podem jogar?", "resposta": "Sim, o lacrosse tem regras e competições femininas. [CONFIRMAR COMO O CHOQUE ORGANIZA OS TREINOS FEMININOS OU MISTOS]" },
-    { "pergunta": "Tem idade mínima?", "resposta": "[PREENCHER IDADE MÍNIMA E REGRAS PARA MENORES DE IDADE]" },
-    { "pergunta": "Quanto custa?", "resposta": "[PREENCHER: A AULA EXPERIMENTAL É GRATUITA? EXISTE MENSALIDADE?]" },
+    { "pergunta": "Tem idade mínima?", "resposta": "Não. Não temos idade mínima: qualquer pessoa pode começar." },
+    { "pergunta": "Mulheres podem jogar?", "resposta": "Sim. O lacrosse tem regras e competições femininas, e o Choque tem jogadoras no time." },
     { "pergunta": "É um esporte perigoso?", "resposta": "O lacrosse tem contato, mas com regras claras e equipamento de proteção. Nos treinos, cada um evolui no seu ritmo." }
   ]
 }

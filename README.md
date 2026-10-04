@@ -38,9 +38,9 @@ Tudo o que muda com frequência está em **`src/data/`**:
 
 | O que você quer mudar | Arquivo |
 |---|---|
-| WhatsApp, Instagram, e-mail, local e horário do treino, números do time, história, valores, vídeo | `src/data/time.json` |
-| Atletas (nome, número, posição, foto) | `src/data/elenco.json` |
-| Jogos, treinos especiais e eventos | `src/data/calendario.json` |
+| Grupo do WhatsApp, Instagram, e-mail, locais e horário do treino, números do time, história, valores, vídeo | `src/data/time.json` |
+| Membros do time (nome, função, foto) | `src/data/elenco.json` |
+| Treinos especiais, eventos e jogos | `src/data/calendario.json` |
 | Placares e conquistas | `src/data/resultados.json` |
 | Fotos e vídeos da galeria | `src/data/galeria.json` |
 | Patrocinadores e benefícios | `src/data/patrocinadores.json` |
@@ -49,7 +49,7 @@ Tudo o que muda com frequência está em **`src/data/`**:
 **Regras que valem para todos:**
 
 - Troque só o texto **entre aspas**. Mantenha as aspas, as vírgulas e as chaves `{ }` / colchetes `[ ]`.
-- Tudo que estiver entre colchetes, como `[PREENCHER]` ou `[NOME DO ATLETA]`, aparece no site com uma **fita amarela listrada**. É para ninguém esquecer de trocar.
+- Tudo que estiver entre colchetes, como `[PREENCHER]` ou `[FOTO DE TREINO]`, aparece no site com uma **fita amarela listrada**. É para ninguém esquecer de trocar.
 - Campos `"confirmado": false` mostram o selo **[confirmar]** ao lado da informação. Quando ela estiver certa, troque para `true`.
 - Se algo for escrito no formato errado, o site **não é publicado quebrado**: o build para e mostra qual arquivo e qual campo corrigir.
 
@@ -58,27 +58,32 @@ Tudo o que muda com frequência está em **`src/data/`**:
 Em `src/data/time.json`, dentro de `"contato"`:
 
 ```json
-"whatsapp": "5511987654321",
+"grupoWhatsapp": "https://chat.whatsapp.com/...",
 "instagram": "choquelacrosse",
-"email": "contato@choquelacrosse.com.br"
+"email": ""
 ```
 
-- **WhatsApp**: só números, com `55` + DDD + número. Assim que estiver preenchido, todos os botões "Venha treinar com a gente" passam a abrir o WhatsApp com a mensagem pronta (`mensagemWhatsapp`).
-- **Instagram**: o usuário sem o `@`.
+- **grupoWhatsapp**: o link do grupo, começando com `https://`. Todos os botões "Venha treinar com a gente" abrem esse link.
+- **instagram**: o usuário sem o `@`. O botão "Quero apoiar o Choque" abre uma conversa no Direct desse perfil.
+- **email**: deixe `""` para não aparecer no site. Se preencher, ele entra no rodapé e como opção de contato para patrocínio.
 
-### Elenco e fotos dos atletas
+O treino fixo fica no bloco `"treino"` do mesmo arquivo: `dias`, `horario` e a lista `locais` (um bloco por local, com `nome` e `linkMapa`). O site escreve "no" antes de cada nome ("no Parque Ibirapuera").
 
-1. Coloque a foto em **`src/assets/elenco/`** (ex.: `joao-silva.jpg`). Use nomes sem espaços nem acentos. De preferência, foto **vertical (3:4)** com pelo menos 800 px de altura.
-2. Em `src/data/elenco.json`, cada atleta é um bloco:
+### Membros do time e fotos
+
+1. Coloque a foto em **`src/assets/elenco/`** (ex.: `nicolas-giusto.jpg`). Use nomes sem espaços nem acentos. De preferência, foto **vertical (3:4)** com pelo menos 800 px de altura.
+2. Em `src/data/elenco.json`, cada pessoa é um bloco:
 
 ```json
-{ "nome": "João Silva", "numero": 7, "posicao": "Ataque", "foto": "joao-silva.jpg", "capitao": false }
+{ "nome": "Nicolas Giusto", "funcao": "Cofundador e capitão", "detalhe": "", "numero": null, "foto": "nicolas-giusto.jpg", "capitao": true }
 ```
 
-- `posicao`: `Ataque`, `Meio`, `Defesa` ou `Goleiro`.
+- `funcao`: o papel no time, do jeito que deve aparecer no card.
+- `detalhe`: uma linha extra opcional (ex.: "Coach auxiliar da seleção brasileira de lacrosse"). Deixe `""` se não tiver.
+- `numero`: o número da camisa. Com `null`, o card mostra as iniciais no lugar.
 - `foto`: o nome do arquivo. Deixe `""` para usar a silhueta do capacete.
 - `capitao`: `true` mostra o selo **C** no card.
-- Para acrescentar um atleta, copie um bloco, cole depois de uma vírgula e edite. O último bloco da lista **não** leva vírgula depois.
+- Para acrescentar alguém, copie um bloco, cole depois de uma vírgula e edite. O último bloco da lista **não** leva vírgula depois.
 
 Não precisa se preocupar com o tamanho da foto: no build, o site gera versões leves (AVIF e WebP) em vários tamanhos.
 
@@ -87,17 +92,23 @@ Não precisa se preocupar com o tamanho da foto: no build, o site gera versões 
 Em `src/data/calendario.json`:
 
 ```json
-{ "data": "2026-11-07", "hora": "10:00", "tipo": "jogo", "titulo": "Choque × Time Tal", "local": "Centro Esportivo Tietê", "detalhes": "" }
+{ "data": "2026-11-08", "hora": "09:00", "tipo": "treino", "titulo": "Treino especial com jogadores da seleção", "local": "Parque Ibirapuera", "detalhes": "" }
 ```
 
 - `data` no formato **AAAA-MM-DD** e `hora` no formato **HH:MM** (ou `""`).
-- `tipo`: `jogo`, `treino` ou `evento`.
-- Eventos com data passada **saem da lista sozinhos**, e o próximo ganha o selo "Próximo". Depois do jogo, lance o placar em `resultados.json`.
-- O treino semanal fixo (dias, horário e local) fica em `time.json`, no bloco `"treino"`.
+- `tipo`: `treino`, `evento` ou `jogo`.
+- Eventos com data passada **saem da lista sozinhos**, e o próximo ganha o selo "Próximo". Com a lista vazia, aparece um aviso de que os treinos de domingo seguem normalmente.
+- O treino de todo domingo não entra aqui: ele fica em `time.json`, no bloco `"treino"`.
 
 ### Resultados
 
-Em `src/data/resultados.json`, use `null` no placar de um jogo que ainda não tem resultado. Vitória, empate ou derrota é calculado sozinho.
+Enquanto `src/data/resultados.json` não tiver nenhum jogo nem conquista, a seção "Placar e conquistas" e o link dela no menu **ficam escondidos**. Ela volta sozinha quando o primeiro jogo for lançado:
+
+```json
+{ "data": "2027-03-14", "adversario": "Time Tal", "competicao": "Amistoso", "placarChoque": 8, "placarAdversario": 5 }
+```
+
+Use `null` no placar de um jogo que ainda não tem resultado. Vitória, empate ou derrota é calculado sozinho.
 
 ### Galeria
 
@@ -115,7 +126,7 @@ Em `src/data/resultados.json`, use `null` no placar de um jogo que ainda não te
 
 ### Patrocinadores
 
-Logos em **`src/assets/patrocinadores/`** (PNG com fundo transparente fica melhor) e dados em `src/data/patrocinadores.json`. O primeiro da lista aparece em destaque.
+Logos em **`src/assets/patrocinadores/`** (PNG com fundo transparente fica melhor) e dados em `src/data/patrocinadores.json`. O primeiro da lista aparece em destaque. Enquanto a lista estiver vazia, a seção mostra uma camisa com o espaço "Sua marca" e a frase de que ainda não há patrocinadores.
 
 ### Editar direto pelo site do GitHub (sem instalar nada)
 
@@ -183,15 +194,16 @@ Para medir velocidade e acessibilidade do site publicado, cole o endereço em <h
 
 ## 6. O que ainda falta preencher
 
-- [ ] WhatsApp, Instagram e e-mail (`time.json`)
-- [ ] Ano de fundação e números do time (`time.json`; hoje são valores de exemplo com o selo [confirmar])
-- [ ] Confirmar dias, horários e local do treino (`time.json`)
-- [ ] Elenco real com fotos (`elenco.json` + `src/assets/elenco/`)
-- [ ] Próximos jogos e eventos (`calendario.json`)
-- [ ] Placares e conquistas (`resultados.json`)
+- [x] Grupo do WhatsApp e Instagram (`time.json`)
+- [ ] E-mail, se o time tiver um (`time.json`; vazio, ele não aparece)
+- [x] Mês e ano de fundação (`time.json`)
+- [ ] Número de atletas no elenco (`time.json` → `numeros`; hoje é 14 com o selo [confirmar])
+- [x] Dias, horário e locais do treino (`time.json`)
+- [x] Membros fixos do time (`elenco.json`)
+- [ ] Fotos dos membros (`src/assets/elenco/` + campo `foto` em `elenco.json`)
+- [ ] Treinos especiais e eventos com data (`calendario.json`)
 - [ ] Mais fotos e vídeos (`galeria.json` + `src/assets/galeria/`)
-- [ ] Patrocinadores e benefícios das cotas (`patrocinadores.json`)
-- [ ] Respostas de "Tem idade mínima?", "Quanto custa?" e "Mulheres podem jogar?" (`perguntas.json`)
+- [x] Perguntas frequentes (`perguntas.json`)
 - [ ] Conferir se o vídeo do YouTube que veio do site antigo é o certo (`time.json` → `video`)
 
 ---

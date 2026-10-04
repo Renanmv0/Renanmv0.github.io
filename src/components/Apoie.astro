@@ -1,17 +1,26 @@
 ---
 // "Apoie o Choque": convite a patrocinadores e logos dos apoiadores
-// (src/data/patrocinadores.json).
+// (src/data/patrocinadores.json). Sem patrocinadores, aparece a camisa com o
+// espaço para a marca. O contato vai para o Direct do Instagram.
 import { Image } from 'astro:assets';
 import Corte from './Corte.astro';
 import Ph from './Ph.astro';
 import Botao from './Botao.astro';
 import Icone from './Icone.astro';
-import { time, patrocinio, linkWhatsapp, whatsappPronto, ehPlaceholder } from '../lib/dados';
+import { time, patrocinio, linkDirect, emailPronto } from '../lib/dados';
 import { imagem } from '../lib/imagens';
 
 const apoiadores = patrocinio.patrocinadores.map((p) => ({ ...p, img: imagem(p.logo, 'patrocinadores') }));
-const email = time.contato.email;
-const linkEmail = !ehPlaceholder(email) && email.includes('@') ? `mailto:${email}?subject=${encodeURIComponent('Patrocínio do Choque Lacrosse')}` : null;
+const direct = linkDirect();
+const linkEmail = emailPronto()
+  ? `mailto:${time.contato.email}?subject=${encodeURIComponent('Patrocínio do Choque Lacrosse')}`
+  : null;
+const botaoApoio = direct
+  ? { href: direct, icone: 'instagram' as const, dica: '(abre o Direct do Instagram)' }
+  : { href: linkEmail ?? '#contato', icone: linkEmail ? ('email' as const) : ('raio' as const), dica: '' };
+
+// Camisa regata, com faixa no peito (como a do time)
+const camisa = 'M72 8Q100 60 128 8H150Q152 66 184 84V242H16V84Q48 66 50 8Z';
 ---
 
 <section class="secao secao--amarelo apoie" id="apoie" aria-labelledby="apoie-titulo">
@@ -27,6 +36,14 @@ const linkEmail = !ehPlaceholder(email) && email.includes('@') ? `mailto:${email
         O lacrosse é novo no Brasil e volta às Olimpíadas em Los Angeles 2028, depois de mais de um século fora. Quem
         apoia o Choque agora cresce junto com o esporte em São Paulo.
       </p>
+      {
+        apoiadores.length === 0 && (
+          <p data-surge>
+            Hoje todo o nosso material vem de doações do Brasil Lacrosse e ainda não temos patrocinadores: a primeira
+            marca na camisa do Choque pode ser a sua.
+          </p>
+        )
+      }
       <ul class="beneficios" role="list" data-surge>
         {
           patrocinio.beneficios.map((b) => (
@@ -40,15 +57,10 @@ const linkEmail = !ehPlaceholder(email) && email.includes('@') ? `mailto:${email
         }
       </ul>
       <div class="apoie__acoes" data-surge>
-        <Botao
-          href={whatsappPronto() ? linkWhatsapp(time.contato.mensagemPatrocinio) : (linkEmail ?? '#contato')}
-          variante="noite"
-          icone={whatsappPronto() ? 'whatsapp' : 'raio'}
-          dica={whatsappPronto() ? '(abre o WhatsApp)' : ''}
-        >
+        <Botao variante="noite" {...botaoApoio}>
           Quero apoiar o Choque
         </Botao>
-        {linkEmail && whatsappPronto() && (
+        {linkEmail && direct && (
           <a class="link-forte" href={linkEmail}>
             Prefiro e-mail
           </a>
@@ -56,35 +68,55 @@ const linkEmail = !ehPlaceholder(email) && email.includes('@') ? `mailto:${email
       </div>
     </div>
 
-    <div class="apoiadores-caixa">
-      <h3 class="apoiadores__titulo">Quem já nos apoia</h3>
-      <ul class="apoiadores" role="list">
-        {
-          apoiadores.map((p, i) => {
-            const conteudo = p.img ? (
-              <Image src={p.img} alt={p.nome} width={320} class="apoiador__logo" />
-            ) : (
-              <span class="apoiador__nome">
-                <Ph texto={p.nome} />
-                <span class="apoiador__dica">[LOGO]</span>
-              </span>
-            );
-            return (
-              <li class:list={['apoiador', { 'apoiador--master': i === 0 }]} data-revela>
-                <span class="varredura varredura--noite" aria-hidden="true" />
-                {p.site ? (
-                  <a class="apoiador__caixa" href={p.site} target="_blank" rel="noopener">
-                    {conteudo}
-                  </a>
+    {
+      apoiadores.length === 0 ? (
+        <div class="vaga" data-revela>
+          <span class="varredura varredura--noite" aria-hidden="true" />
+          <svg class="camisa" viewBox="0 0 200 250" role="img" aria-labelledby="camisa-titulo">
+            <title id="camisa-titulo">Camisa do Choque com o espaço para a sua marca no peito</title>
+            <defs>
+              <clipPath id="camisa-recorte">
+                <path d={camisa} />
+              </clipPath>
+            </defs>
+            <path class="camisa__corpo" d={camisa} />
+            <rect class="camisa__faixa" x="0" y="100" width="200" height="38" clip-path="url(#camisa-recorte)" />
+            <text class="camisa__marca" x="100" y="120">SUA MARCA</text>
+            <text class="camisa__numero" x="100" y="192">00</text>
+          </svg>
+        </div>
+      ) : (
+        <div class="apoiadores-caixa">
+          <h3 class="apoiadores__titulo">Quem já nos apoia</h3>
+          <ul class="apoiadores" role="list">
+            {
+              apoiadores.map((p, i) => {
+                const conteudo = p.img ? (
+                  <Image src={p.img} alt={p.nome} width={320} class="apoiador__logo" />
                 ) : (
-                  <div class="apoiador__caixa">{conteudo}</div>
-                )}
-              </li>
-            );
-          })
-        }
-      </ul>
-    </div>
+                  <span class="apoiador__nome">
+                    <Ph texto={p.nome} />
+                    <span class="apoiador__dica">[LOGO]</span>
+                  </span>
+                );
+                return (
+                  <li class:list={['apoiador', { 'apoiador--master': i === 0 }]} data-revela>
+                    <span class="varredura varredura--noite" aria-hidden="true" />
+                    {p.site ? (
+                      <a class="apoiador__caixa" href={p.site} target="_blank" rel="noopener">
+                        {conteudo}
+                      </a>
+                    ) : (
+                      <div class="apoiador__caixa">{conteudo}</div>
+                    )}
+                  </li>
+                );
+              })
+            }
+          </ul>
+        </div>
+      )
+    }
   </div>
 </section>
 
@@ -126,6 +158,43 @@ const linkEmail = !ehPlaceholder(email) && email.includes('@') ? `mailto:${email
     align-items: center;
     gap: 1rem 1.75rem;
     margin-top: 0.5rem;
+  }
+
+  /* ---------- Camisa "sua marca aqui" (enquanto não há patrocinadores) ---------- */
+  .vaga {
+    position: relative;
+    display: grid;
+    justify-items: center;
+  }
+  .camisa {
+    width: min(100%, 21rem);
+    transform: rotate(3deg);
+    filter: drop-shadow(10px 10px 0 rgb(11 14 26 / 0.22));
+  }
+  .camisa__corpo {
+    fill: var(--noite);
+  }
+  .camisa__faixa {
+    fill: var(--amarelo);
+  }
+  .camisa__marca {
+    fill: var(--noite);
+    font-family: var(--t-titulo);
+    font-weight: 900;
+    font-size: 25px;
+    letter-spacing: 0.06em;
+    text-anchor: middle;
+    dominant-baseline: central;
+  }
+  .camisa__numero {
+    fill: none;
+    stroke: var(--amarelo);
+    stroke-width: 2.5;
+    font-family: var(--t-numero);
+    font-weight: 900;
+    font-size: 96px;
+    text-anchor: middle;
+    dominant-baseline: central;
   }
 
   .apoiadores__titulo {

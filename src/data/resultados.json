@@ -1,12 +1,5 @@
 {
-  "_leia": "Placar dos jogos (do mais recente para o mais antigo) e conquistas. Use null no placar de um jogo que ainda não tem resultado.",
-  "jogos": [
-    { "data": "2026-08-23", "adversario": "[ADVERSÁRIO]", "competicao": "[AMISTOSO OU CAMPEONATO]", "placarChoque": null, "placarAdversario": null },
-    { "data": "2026-06-14", "adversario": "[ADVERSÁRIO]", "competicao": "[AMISTOSO OU CAMPEONATO]", "placarChoque": null, "placarAdversario": null },
-    { "data": "2026-04-05", "adversario": "[ADVERSÁRIO]", "competicao": "[AMISTOSO OU CAMPEONATO]", "placarChoque": null, "placarAdversario": null }
-  ],
-  "conquistas": [
-    { "ano": 2026, "titulo": "[CONQUISTA]", "descricao": "[DETALHE DA CONQUISTA]" },
-    { "ano": 2025, "titulo": "[CONQUISTA]", "descricao": "[DETALHE DA CONQUISTA]" }
-  ]
+  "_leia": "Placar dos jogos (do mais recente para o mais antigo) e conquistas. Enquanto as duas listas estiverem vazias, a seção de placar e o link dela no menu ficam escondidos. Jogo: { \"data\": \"AAAA-MM-DD\", \"adversario\": ..., \"competicao\": ..., \"placarChoque\": 0, \"placarAdversario\": 0 } (use null no placar enquanto não houver resultado). Conquista: { \"ano\": 2027, \"titulo\": ..., \"descricao\": ... }.",
+  "jogos": [],
+  "conquistas": []
 }

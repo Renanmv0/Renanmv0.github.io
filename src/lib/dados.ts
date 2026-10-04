@@ -19,22 +19,24 @@ const esquemaTime = z.object({
   nome: texto,
   cidade: texto,
   estado: texto,
-  fundacao: z.object({ ano: z.number().int().min(1900), confirmado: z.boolean() }),
+  fundacao: z.object({
+    ano: z.number().int().min(1900),
+    mes: z.number().int().min(1, 'use um mês de 1 a 12').max(12, 'use um mês de 1 a 12').default(1),
+    confirmado: z.boolean(),
+  }),
   descricaoSeo: texto,
   contato: z.object({
-    whatsapp: texto,
-    mensagemWhatsapp: texto,
-    mensagemPatrocinio: texto,
+    grupoWhatsapp: texto,
     instagram: texto,
-    email: texto,
+    email: texto.default(''),
   }),
   treino: z.object({
-    local: texto,
-    endereco: texto,
-    linkMapa: texto,
     dias: texto,
     horario: texto,
     confirmado: z.boolean(),
+    locais: z
+      .array(z.object({ nome: texto, endereco: texto.default(''), linkMapa: texto }))
+      .min(1, 'informe pelo menos um local de treino'),
     chegada: texto,
     levar: z.array(texto),
     emprestamos: z.array(texto),
@@ -45,14 +47,13 @@ const esquemaTime = z.object({
   video: z.object({ youtubeId: texto, titulo: texto }),
 });
 
-export const POSICOES = ['Ataque', 'Meio', 'Defesa', 'Goleiro'] as const;
-
 const esquemaElenco = z.object({
-  atletas: z.array(
+  membros: z.array(
     z.object({
       nome: texto,
-      numero: z.number().int().min(0).max(99),
-      posicao: z.enum(POSICOES, { error: 'use Ataque, Meio, Defesa ou Goleiro' }),
+      funcao: texto,
+      detalhe: texto.default(''),
+      numero: z.number().int().min(0).max(99).nullable().default(null),
       foto: texto.default(''),
       capitao: z.boolean().default(false),
     }),
@@ -112,15 +113,18 @@ function conferir<T extends z.ZodType>(arquivo: string, esquema: T, conteudo: un
 }
 
 export const time = conferir('time.json', esquemaTime, timeJson);
-export const elenco = conferir('elenco.json', esquemaElenco, elencoJson).atletas;
+export const elenco = conferir('elenco.json', esquemaElenco, elencoJson).membros;
 export const calendario = conferir('calendario.json', esquemaCalendario, calendarioJson).eventos;
 export const resultados = conferir('resultados.json', esquemaResultados, resultadosJson);
 export const galeria = conferir('galeria.json', esquemaGaleria, galeriaJson).itens;
 export const patrocinio = conferir('patrocinadores.json', esquemaPatrocinadores, patrocinadoresJson);
 export const perguntas = conferir('perguntas.json', esquemaPerguntas, perguntasJson).perguntas;
 
-export type Atleta = (typeof elenco)[number];
+export type Membro = (typeof elenco)[number];
 export type Evento = (typeof calendario)[number];
+
+/** A seção de placar só aparece depois do primeiro jogo ou conquista. */
+export const temResultados = resultados.jogos.length > 0 || resultados.conquistas.length > 0;
 
 // ---------------------------------------------------------------------------
 // Ajudantes usados pelos componentes
@@ -128,24 +132,44 @@ export type Evento = (typeof calendario)[number];
 /** Texto ainda não preenchido: tem [COLCHETES]. */
 export const ehPlaceholder = (valor: string) => /\[[^\]]+\]/.test(valor);
 
-const soDigitos = (valor: string) => valor.replace(/\D/g, '');
+/** "a, b e c" ou "a, b ou c" */
+export const juntar = (itens: readonly string[], conector = 'e') =>
+  itens.length > 1 ? `${itens.slice(0, -1).join(', ')} ${conector} ${itens.at(-1)}` : (itens[0] ?? '');
 
-/** Link do WhatsApp com mensagem pronta. Sem número válido, aponta para a seção de contato. */
-export function linkWhatsapp(mensagem = time.contato.mensagemWhatsapp): string {
-  const numero = soDigitos(time.contato.whatsapp);
-  if (numero.length < 12) return '#contato';
-  return `https://wa.me/${numero}?text=${encodeURIComponent(mensagem)}`;
-}
+/** Link do grupo do WhatsApp. Sem link válido, aponta para a seção de contato. */
+export const grupoPronto = () => /^https:\/\/\S+$/.test(time.contato.grupoWhatsapp.trim());
+export const linkGrupo = () => (grupoPronto() ? time.contato.grupoWhatsapp.trim() : '#contato');
 
-export const whatsappPronto = () => soDigitos(time.contato.whatsapp).length >= 12;
+/** Props do botão "Venha treinar com a gente": abre o grupo do WhatsApp. */
+export const botaoGrupo = () =>
+  grupoPronto()
+    ? { href: linkGrupo(), icone: 'whatsapp' as const, dica: '(abre o grupo do WhatsApp)' }
+    : { href: '#contato', icone: 'raio' as const, dica: '' };
 
-export function linkInstagram(): string | null {
+const usuarioInstagram = () => {
   const usuario = time.contato.instagram.replace(/^@/, '').trim();
-  if (!usuario || ehPlaceholder(usuario)) return null;
-  return `https://www.instagram.com/${usuario}/`;
+  return !usuario || ehPlaceholder(usuario) ? null : usuario;
+};
+export function linkInstagram(): string | null {
+  const usuario = usuarioInstagram();
+  return usuario ? `https://www.instagram.com/${usuario}/` : null;
+}
+/** Abre uma conversa no Direct do Instagram do time. */
+export function linkDirect(): string | null {
+  const usuario = usuarioInstagram();
+  return usuario ? `https://ig.me/m/${usuario}` : null;
 }
 
-export const anosDeTime = (hoje = new Date()) => Math.max(1, hoje.getFullYear() - time.fundacao.ano);
+export const emailPronto = () => !ehPlaceholder(time.contato.email) && time.contato.email.includes('@');
+
+/** "no Centro Esportivo Tietê ou no Parque Ibirapuera" */
+export const ondeTreinamos = () => juntar(time.treino.locais.map((l) => `no ${l.nome}`), 'ou');
+
+/** Anos completos desde a fundação (mês e ano); no mínimo 1. */
+export function anosDeTime(hoje = new Date()) {
+  const { ano, mes } = time.fundacao;
+  return Math.max(1, hoje.getFullYear() - ano - (hoje.getMonth() + 1 < mes ? 1 : 0));
+}
 
 /** Datas sempre no fuso de São Paulo e em português. */
 const fuso = 'America/Sao_Paulo';

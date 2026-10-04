@@ -11,6 +11,8 @@ Site de página única do time Choque Lacrosse (São Paulo). Astro 7 + GSAP 3 (S
 ## Estrutura
 - Conteúdo editável pelo dono do site: `src/data/*.json`, validado com zod em `src/lib/dados.ts` (mensagens de erro em português). Fotos ficam em `src/assets/`, resolvidas por `src/lib/imagens.ts`.
 - Uma seção por componente em `src/components/`; ordem em `src/pages/index.astro`.
+- Listas vazias se escondem: sem jogos nem conquistas, a seção de placar e o link do menu somem (e a galeria troca de fundo para manter a alternância); sem patrocinadores, Apoie mostra a camisa "Sua marca"; sem eventos, a agenda mostra um aviso.
+- Contato: grupo do WhatsApp (`contato.grupoWhatsapp`, usado pelos botões "Venha treinar com a gente") e Instagram; patrocínio vai para o Direct do Instagram. E-mail vazio não aparece.
 - Animações em `src/scripts/animacoes.ts`. A entrada do hero é CSS puro (em `Hero.astro`), para não atrasar o LCP.
 
 ## Direção de arte (manter)
@@ -25,6 +27,7 @@ Site de página única do time Choque Lacrosse (São Paulo). Astro 7 + GSAP 3 (S
 - Tom: intenso e acolhedor, mas profissional. Evitar coloquialismos como "a gente", "pra/pro", "é só", "chama", "vem" (use "emprestamos", "fale conosco", "venha"). O CTA "Venha treinar com a gente" foi pedido pelo dono e fica.
 - Sem JavaScript ou com `prefers-reduced-motion`, todo o conteúdo precisa aparecer parado.
 - Placeholders sempre entre colchetes (`[PREENCHER]`): `Ph.astro` os marca com fita amarela. Informação não verificada leva `"confirmado": false`.
+- Treinos: domingos, 9h às 11h, no Centro Esportivo Tietê ou no Parque Ibirapuera; todos gratuitos, sem aula experimental (não usar "treino experimental"). Material doado pelo Brasil Lacrosse. O Choque ainda não disputou jogos: não inventar adversários, placares ou conquistas.
 - Não afirmar fatos não confirmados (ex.: "primeiro time do Brasil" foi removido porque não há comprovação). Lacrosse **volta** às Olimpíadas em LA 2028 (foi olímpico em 1904 e 1908); quem estreia é o formato sixes.
 - Antes de entregar mudanças visuais: `npm run build`, `npm run preview` e `npm run qa` sem violações; Lighthouse mobile ≥ 90.
 

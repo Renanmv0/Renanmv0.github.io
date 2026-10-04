@@ -7,12 +7,10 @@ import Ph from './Ph.astro';
 import Botao from './Botao.astro';
 import Icone from './Icone.astro';
 import PalavraChoque from './PalavraChoque.astro';
-import { time, linkWhatsapp, whatsappPronto, linkInstagram, ehPlaceholder } from '../lib/dados';
+import { time, botaoGrupo, grupoPronto, linkGrupo, linkInstagram, emailPronto } from '../lib/dados';
 
 const { contato, treino } = time;
 const instagram = linkInstagram();
-const emailOk = !ehPlaceholder(contato.email) && contato.email.includes('@');
-const whatsappVisivel = contato.whatsapp.replace(/\D/g, '').replace(/^55(\d{2})(\d{4,5})(\d{4})$/, '($1) $2-$3');
 const ano = new Date().getFullYear();
 ---
 
@@ -28,8 +26,8 @@ const ano = new Date().getFullYear();
 
     <div class="rodape__grade">
       <div class="rodape__cta">
-        <p class="abre">Primeira vez? Envie uma mensagem pelo WhatsApp e indicamos o próximo treino.</p>
-        <Botao href={linkWhatsapp()} icone={whatsappPronto() ? 'whatsapp' : 'raio'} dica={whatsappPronto() ? '(abre o WhatsApp)' : ''}>
+        <p class="abre">Primeira vez? Entre no grupo do WhatsApp e confirme onde será o treino de domingo.</p>
+        <Botao {...botaoGrupo()}>
           Venha treinar com a gente
         </Botao>
       </div>
@@ -40,13 +38,13 @@ const ano = new Date().getFullYear();
           <div>
             <p class="contato__rotulo">WhatsApp</p>
             {
-              whatsappPronto() ? (
-                <a class="contato__valor" href={linkWhatsapp()} target="_blank" rel="noopener">
-                  {whatsappVisivel}
+              grupoPronto() ? (
+                <a class="contato__valor" href={linkGrupo()} target="_blank" rel="noopener">
+                  Entrar no grupo
                 </a>
               ) : (
                 <p class="contato__valor">
-                  <Ph texto={contato.whatsapp} />
+                  <Ph texto={contato.grupoWhatsapp} />
                 </p>
               )
             }
@@ -69,30 +67,34 @@ const ano = new Date().getFullYear();
             }
           </div>
         </li>
-        <li class="contato">
-          <Icone nome="email" />
-          <div>
-            <p class="contato__rotulo">E-mail</p>
-            {
-              emailOk ? (
+        {
+          emailPronto() && (
+            <li class="contato">
+              <Icone nome="email" />
+              <div>
+                <p class="contato__rotulo">E-mail</p>
                 <a class="contato__valor" href={`mailto:${contato.email}`}>
                   {contato.email}
                 </a>
-              ) : (
-                <p class="contato__valor">
-                  <Ph texto={contato.email} />
-                </p>
-              )
-            }
-          </div>
-        </li>
+              </div>
+            </li>
+          )
+        }
         <li class="contato">
           <Icone nome="mapa" />
           <div>
             <p class="contato__rotulo">Onde treinamos</p>
-            <a class="contato__valor" href={treino.linkMapa} target="_blank" rel="noopener">
-              {treino.local}
-            </a>
+            {
+              treino.locais.map((local) => (
+                <a class="contato__valor" href={local.linkMapa} target="_blank" rel="noopener">
+                  {local.nome}
+                  <span class="sr-only"> (abre o mapa)</span>
+                </a>
+              ))
+            }
+            <p class="contato__extra">
+              {treino.dias}, {treino.horario}
+            </p>
           </div>
         </li>
       </ul>
@@ -168,6 +170,8 @@ const ano = new Date().getFullYear();
     color: var(--nevoa);
   }
   .contato__valor {
+    display: block;
+    width: fit-content;
     font-family: var(--t-titulo);
     font-weight: 800;
     font-size: 1.5rem;
@@ -177,6 +181,14 @@ const ano = new Date().getFullYear();
   }
   a.contato__valor:hover {
     color: var(--amarelo);
+  }
+  .contato__valor + .contato__valor {
+    margin-top: 0.3rem;
+  }
+  .contato__extra {
+    margin-top: 0.35rem;
+    font-size: var(--fs-pequeno);
+    color: var(--nevoa);
   }
 
   .rodape__base {

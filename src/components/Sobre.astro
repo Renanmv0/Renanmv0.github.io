@@ -10,7 +10,12 @@ import { time, anosDeTime } from '../lib/dados';
 
 const anos = anosDeTime();
 const contadores = [
-  { valor: anos, rotulo: anos === 1 ? 'ano de Choque' : 'anos de Choque', confirmado: time.fundacao.confirmado, fundacao: time.fundacao.ano },
+  {
+    valor: anos,
+    rotulo: anos === 1 ? 'ano de Choque' : 'anos de Choque',
+    confirmado: time.fundacao.confirmado,
+    fundacao: `${time.fundacao.ano}-${time.fundacao.mes}`,
+  },
   ...time.numeros.map((n) => ({ ...n, fundacao: undefined })),
 ];
 

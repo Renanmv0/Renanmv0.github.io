@@ -32,11 +32,12 @@ const dadosEstruturados = {
   logo: new URL('/icone-512.png', site).href,
   image: imagemCompartilhar,
   description: time.descricaoSeo,
-  location: {
+  ...(time.fundacao.confirmado ? { foundingDate: `${time.fundacao.ano}-${String(time.fundacao.mes).padStart(2, '0')}` } : {}),
+  location: time.treino.locais.map((local) => ({
     '@type': 'Place',
-    name: time.treino.local,
+    name: local.nome,
     address: { '@type': 'PostalAddress', addressLocality: time.cidade, addressRegion: time.estado, addressCountry: 'BR' },
-  },
+  })),
   ...(instagram ? { sameAs: [instagram] } : {}),
 };
 ---

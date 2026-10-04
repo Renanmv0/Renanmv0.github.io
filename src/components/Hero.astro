@@ -6,7 +6,7 @@ import fotoTime from '../assets/fotos/time.jpg';
 import Botao from './Botao.astro';
 import Icone from './Icone.astro';
 import Fita from './Fita.astro';
-import { time, linkWhatsapp, whatsappPronto } from '../lib/dados';
+import { time, botaoGrupo } from '../lib/dados';
 
 // Inclinação de cada letra ao chegar (dá o efeito de impacto desalinhado)
 const letras = [...'CHOQUE'].map((letra, i) => ({ letra, giro: [-7, 5, -4, 6, -5, 4][i] }));
@@ -65,11 +65,11 @@ const letras = [...'CHOQUE'].map((letra, i) => ({ letra, giro: [-7, 5, -4, 6, -5
 
     <p class="hero__frase">
       <strong>O esporte mais rápido sobre dois pés.</strong>
-      Treinos abertos para iniciantes: ensinamos do zero e emprestamos o equipamento.
+      Treinos gratuitos para iniciantes: ensinamos do zero e emprestamos o equipamento.
     </p>
 
     <div class="hero__acoes">
-      <Botao href={linkWhatsapp()} icone={whatsappPronto() ? 'whatsapp' : 'raio'} dica={whatsappPronto() ? '(abre o WhatsApp)' : ''}>
+      <Botao {...botaoGrupo()}>
         Venha treinar com a gente
       </Botao>
       <a class="link-forte hero__saiba" href="#lacrosse">

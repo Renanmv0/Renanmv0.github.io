@@ -4,10 +4,10 @@ import { Picture } from 'astro:assets';
 import escudo from '../assets/marca/escudo.png';
 import Icone from './Icone.astro';
 import Botao from './Botao.astro';
-import { linkWhatsapp, linkInstagram, whatsappPronto } from '../lib/dados';
+import { botaoGrupo, linkInstagram, temResultados } from '../lib/dados';
 
 // Itens do menu: [âncora, texto]. A ordem segue a página.
-const itens: Array<[string, string]> = [
+const todosItens: Array<[string, string]> = [
   ['#lacrosse', 'O que é lacrosse'],
   ['#choque', 'O Choque'],
   ['#entrar', 'Como entrar'],
@@ -18,6 +18,8 @@ const itens: Array<[string, string]> = [
   ['#apoie', 'Apoie o Choque'],
   ['#contato', 'Contato'],
 ];
+// O placar só entra no menu depois do primeiro jogo (ver resultados.json)
+const itens = todosItens.filter(([href]) => href !== '#resultados' || temResultados);
 const instagram = linkInstagram();
 ---
 
@@ -79,7 +81,7 @@ const instagram = linkInstagram();
       </ul>
     </nav>
     <div class="menu__rodape">
-      <Botao href={linkWhatsapp()} icone={whatsappPronto() ? 'whatsapp' : 'raio'} dica={whatsappPronto() ? '(abre o WhatsApp)' : ''}>
+      <Botao {...botaoGrupo()}>
         Venha treinar com a gente
       </Botao>
       {

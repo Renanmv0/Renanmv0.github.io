@@ -1,13 +1,14 @@
 ---
 // "Onde e quando": treino semanal em destaque (placa de advertência) e
-// próximos jogos e eventos (src/data/calendario.json).
+// próximos eventos (src/data/calendario.json).
 // Eventos que já passaram somem sozinhos da lista (conferido no navegador).
 import Corte from './Corte.astro';
 import Ph from './Ph.astro';
 import Icone from './Icone.astro';
-import { time, calendario, formatarData, ehPlaceholder } from '../lib/dados';
+import { time, calendario, formatarData, ehPlaceholder, grupoPronto, linkGrupo, linkInstagram } from '../lib/dados';
 
 const { treino } = time;
+const instagram = linkInstagram();
 const eventos = [...calendario].sort((a, b) => (a.data + a.hora).localeCompare(b.data + b.hora));
 const nomesTipo = { jogo: 'Jogo', treino: 'Treino', evento: 'Evento' } as const;
 // "09:00" -> "9h" ; "15:30" -> "15h30"
@@ -58,7 +59,7 @@ function linkAgenda(e: (typeof eventos)[number]) {
             </svg>
             Atenção
           </p>
-          <h3 class="placa__titulo" id="placa-titulo">Treino aberto para iniciantes</h3>
+          <h3 class="placa__titulo" id="placa-titulo">Treino gratuito e aberto a iniciantes</h3>
           <dl class="placa__dados">
             <div>
               <dt><Icone nome="calendario" tamanho={20} /> Quando</dt>
@@ -75,19 +76,37 @@ function linkAgenda(e: (typeof eventos)[number]) {
             <div>
               <dt><Icone nome="mapa" tamanho={20} /> Onde</dt>
               <dd>
-                <Ph texto={treino.local} />
-                {treino.endereco && (
-                  <span class="placa__endereco">
-                    <Ph texto={treino.endereco} />
-                  </span>
-                )}
+                <ul class="placa__locais" role="list">
+                  {
+                    treino.locais.map((local, i) => (
+                      <li>
+                        {i > 0 && <span class="placa__ou">ou </span>}
+                        <a class="placa__local" href={local.linkMapa} target="_blank" rel="noopener">
+                          <Ph texto={local.nome} />
+                          <Icone nome="externo" tamanho={18} />
+                          <span class="sr-only"> (abre o mapa)</span>
+                        </a>
+                        {local.endereco && (
+                          <span class="placa__endereco">
+                            <Ph texto={local.endereco} />
+                          </span>
+                        )}
+                      </li>
+                    ))
+                  }
+                </ul>
               </dd>
             </div>
           </dl>
           <div class="placa__rodape">
-            <a class="placa__mapa" href={treino.linkMapa} target="_blank" rel="noopener">
-              Como chegar <Icone nome="externo" tamanho={18} />
-            </a>
+            {treino.locais.length > 1 && <p class="placa__aviso">Confirme no grupo onde será o treino do domingo.</p>}
+            {
+              grupoPronto() && (
+                <a class="placa__botao" href={linkGrupo()} target="_blank" rel="noopener">
+                  Grupo do WhatsApp <Icone nome="whatsapp" tamanho={20} />
+                </a>
+              )
+            }
             {!treino.confirmado && <span class="selo-confirmar">[confirmar dias e horários]</span>}
           </div>
         </div>
@@ -95,54 +114,66 @@ function linkAgenda(e: (typeof eventos)[number]) {
     </div>
 
     <div class="agenda__lista-caixa">
-      <h3 class="agenda__subtitulo">Próximos jogos e eventos</h3>
-      <ol class="eventos" role="list" data-eventos>
+      <h3 class="agenda__subtitulo">Próximos eventos</h3>
+      {
+        eventos.length > 0 && (
+          <ol class="eventos" role="list" data-eventos>
+            {
+              eventos.map((e) => (
+                <li class:list={['evento', `evento--${e.tipo}`]} data-data={e.data} data-surge>
+                  <p class="evento__data" aria-hidden="true">
+                    <span class="evento__dia tabular">{formatarData(e.data, { day: '2-digit' })}</span>
+                    <span class="evento__mes">{formatarData(e.data, { month: 'short' }).replace('.', '')}</span>
+                  </p>
+                  <div class="evento__info">
+                    <p class="evento__tipo">
+                      <span class="etiqueta">{nomesTipo[e.tipo]}</span>
+                      <span class="evento__proximo" hidden>
+                        Próximo
+                      </span>
+                    </p>
+                    <h4 class="evento__titulo">
+                      <Ph texto={e.titulo} />
+                    </h4>
+                    <p class="evento__quando">
+                      <time datetime={e.hora ? `${e.data}T${e.hora}-03:00` : e.data}>
+                        {formatarData(e.data, { weekday: 'long', day: 'numeric', month: 'long' })}
+                        {e.hora && `, ${formatarHora(e.hora)}`}
+                      </time>
+                    </p>
+                    {e.local && (
+                      <p class="evento__local">
+                        <Icone nome="mapa" tamanho={18} /> <Ph texto={e.local} />
+                      </p>
+                    )}
+                    {e.detalhes && (
+                      <p class="evento__detalhes">
+                        <Ph texto={e.detalhes} />
+                      </p>
+                    )}
+                    {!ehPlaceholder(e.titulo) && (
+                      <a class="evento__salvar" href={linkAgenda(e)} target="_blank" rel="noopener">
+                        <Icone nome="calendario" tamanho={18} /> Salvar na agenda
+                      </a>
+                    )}
+                  </div>
+                </li>
+              ))
+            }
+          </ol>
+        )
+      }
+      <div class="agenda__vazia" data-eventos-vazio hidden={eventos.length > 0}>
+        <p>Nenhum evento especial marcado no momento. Os treinos de domingo seguem normalmente.</p>
         {
-          eventos.map((e) => (
-            <li class:list={['evento', `evento--${e.tipo}`]} data-data={e.data} data-surge>
-              <p class="evento__data" aria-hidden="true">
-                <span class="evento__dia tabular">{formatarData(e.data, { day: '2-digit' })}</span>
-                <span class="evento__mes">{formatarData(e.data, { month: 'short' }).replace('.', '')}</span>
-              </p>
-              <div class="evento__info">
-                <p class="evento__tipo">
-                  <span class="etiqueta">{nomesTipo[e.tipo]}</span>
-                  <span class="evento__proximo" hidden>
-                    Próximo
-                  </span>
-                </p>
-                <h4 class="evento__titulo">
-                  <Ph texto={e.titulo} />
-                </h4>
-                <p class="evento__quando">
-                  <time datetime={e.hora ? `${e.data}T${e.hora}-03:00` : e.data}>
-                    {formatarData(e.data, { weekday: 'long', day: 'numeric', month: 'long' })}
-                    {e.hora && `, ${formatarHora(e.hora)}`}
-                  </time>
-                </p>
-                {e.local && (
-                  <p class="evento__local">
-                    <Icone nome="mapa" tamanho={18} /> <Ph texto={e.local} />
-                  </p>
-                )}
-                {e.detalhes && (
-                  <p class="evento__detalhes">
-                    <Ph texto={e.detalhes} />
-                  </p>
-                )}
-                {!ehPlaceholder(e.titulo) && (
-                  <a class="evento__salvar" href={linkAgenda(e)} target="_blank" rel="noopener">
-                    <Icone nome="calendario" tamanho={18} /> Salvar na agenda
-                  </a>
-                )}
-              </div>
-            </li>
-          ))
+          instagram && (
+            <a class="link-forte" href={instagram} target="_blank" rel="noopener">
+              <Icone nome="instagram" /> Siga @{time.contato.instagram.replace(/^@/, '')}
+              <span class="sr-only"> no Instagram</span>
+            </a>
+          )
         }
-      </ol>
-      <p class="agenda__vazia" data-eventos-vazio hidden>
-        Nenhum jogo marcado no momento. O treino semanal continua normalmente.
-      </p>
+      </div>
     </div>
   </div>
 </section>
@@ -231,6 +262,33 @@ function linkAgenda(e: (typeof eventos)[number]) {
     line-height: 1.05;
     text-transform: uppercase;
   }
+  .placa__locais {
+    display: grid;
+    gap: 0.2rem;
+    list-style: none;
+    padding: 0;
+  }
+  .placa__ou {
+    font-family: var(--t-texto);
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: none;
+  }
+  .placa__local {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    text-decoration: underline;
+    text-decoration-thickness: 3px;
+    text-underline-offset: 0.12em;
+  }
+  .placa__local:hover {
+    text-decoration-color: transparent;
+  }
+  .placa__local:focus-visible,
+  .placa__botao:focus-visible {
+    outline-color: var(--noite);
+  }
   .placa__endereco {
     display: block;
     margin-top: 0.25rem;
@@ -246,7 +304,12 @@ function linkAgenda(e: (typeof eventos)[number]) {
     gap: 0.75rem 1rem;
     margin-top: 1.25rem;
   }
-  .placa__mapa {
+  .placa__aviso {
+    flex-basis: 100%;
+    font-weight: 700;
+    line-height: 1.35;
+  }
+  .placa__botao {
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
@@ -260,11 +323,8 @@ function linkAgenda(e: (typeof eventos)[number]) {
     text-transform: uppercase;
     text-decoration: none;
   }
-  .placa__mapa:hover {
+  .placa__botao:hover {
     background: var(--noite-3);
-  }
-  .placa__mapa:focus-visible {
-    outline-color: var(--noite);
   }
   .placa :global(.ph) {
     color: var(--noite);
@@ -378,8 +438,21 @@ function linkAgenda(e: (typeof eventos)[number]) {
     color: var(--amarelo);
   }
   .agenda__vazia {
+    display: grid;
+    gap: 1.25rem;
+    justify-items: start;
     padding: 1.5rem 0;
+    border-top: 2px solid var(--noite-3);
     color: var(--nevoa);
+  }
+  .agenda__vazia[hidden] {
+    display: none;
+  }
+  .agenda__vazia .link-forte {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--giz);
   }
 
   @media (prefers-reduced-motion: no-preference) {

@@ -1,13 +1,11 @@
 {
-  "_leia": "Elenco. Cada atleta é um bloco { }. posicao: Ataque, Meio, Defesa ou Goleiro. foto: nome do arquivo dentro de src/assets/elenco/ (ex.: \"joao.jpg\"); deixe \"\" para usar a silhueta. capitao: true mostra o selo C.",
-  "atletas": [
-    { "nome": "[NOME DO ATLETA]", "numero": 1, "posicao": "Goleiro", "foto": "", "capitao": false },
-    { "nome": "[NOME DO ATLETA]", "numero": 3, "posicao": "Defesa", "foto": "", "capitao": false },
-    { "nome": "[NOME DO ATLETA]", "numero": 7, "posicao": "Ataque", "foto": "", "capitao": true },
-    { "nome": "[NOME DO ATLETA]", "numero": 9, "posicao": "Meio", "foto": "", "capitao": false },
-    { "nome": "[NOME DO ATLETA]", "numero": 12, "posicao": "Meio", "foto": "", "capitao": false },
-    { "nome": "[NOME DO ATLETA]", "numero": 14, "posicao": "Defesa", "foto": "", "capitao": false },
-    { "nome": "[NOME DO ATLETA]", "numero": 15, "posicao": "Ataque", "foto": "", "capitao": false },
-    { "nome": "[NOME DO ATLETA]", "numero": 88, "posicao": "Meio", "foto": "", "capitao": false }
+  "_leia": "Membros do time, na ordem em que aparecem. funcao: o papel no time (ex.: \"Administrador e jogador\"). detalhe: uma linha extra, opcional (ou \"\"). numero: número da camisa, ou null para mostrar as iniciais no lugar. foto: nome do arquivo dentro de src/assets/elenco/ (ex.: \"nicolas.jpg\"); deixe \"\" enquanto não houver foto. capitao: true mostra o selo C.",
+  "membros": [
+    { "nome": "Nicolas Giusto", "funcao": "Cofundador e capitão", "detalhe": "", "numero": null, "foto": "", "capitao": true },
+    { "nome": "Kevin Lehman", "funcao": "Cofundador e coach", "detalhe": "Coach auxiliar da seleção brasileira de lacrosse", "numero": null, "foto": "", "capitao": false },
+    { "nome": "Renan Vieira", "funcao": "Administrador e jogador", "detalhe": "", "numero": null, "foto": "", "capitao": false },
+    { "nome": "Luiz Aquino", "funcao": "Administrador e goleiro", "detalhe": "", "numero": null, "foto": "", "capitao": false },
+    { "nome": "Arthur Rinaldi", "funcao": "Administrador e jogador", "detalhe": "", "numero": null, "foto": "", "capitao": false },
+    { "nome": "Isabela de Genaro", "funcao": "Jogadora e social media", "detalhe": "", "numero": null, "foto": "", "capitao": false }
   ]
 }

@@ -4,24 +4,22 @@
 import Corte from './Corte.astro';
 import Ph from './Ph.astro';
 import Botao from './Botao.astro';
-import { time, perguntas, linkWhatsapp, whatsappPronto } from '../lib/dados';
+import Icone from './Icone.astro';
+import { time, perguntas, botaoGrupo, juntar, ondeTreinamos } from '../lib/dados';
 
 const { treino } = time;
 // "Roupa de treino, chuteira ou tênis e água" (só a primeira palavra fica maiúscula)
 const minuscula = (t: string) => t.charAt(0).toLowerCase() + t.slice(1);
-const listar = (itens: readonly string[]) => {
-  const lista = itens.map((t, i) => (i === 0 ? t : minuscula(t)));
-  return lista.length > 1 ? `${lista.slice(0, -1).join(', ')} e ${lista.at(-1)}` : (lista[0] ?? '');
-};
+const listar = (itens: readonly string[]) => juntar(itens.map((t, i) => (i === 0 ? t : minuscula(t))));
 
 const passos = [
   {
-    titulo: 'Fale conosco pelo WhatsApp',
-    texto: 'Informe seu nome, sua idade e se já praticou algum esporte. Respondemos com a data do próximo treino.',
+    titulo: 'Entre no grupo do WhatsApp',
+    texto: 'É por lá que você confirma onde será o treino de cada domingo. Apresente-se e conte se já praticou algum esporte.',
   },
   {
-    titulo: 'Venha para o treino experimental',
-    texto: `${treino.dias}, ${treino.horario}, no ${treino.local}. ${treino.chegada}`,
+    titulo: 'Venha para o treino de domingo',
+    texto: `${treino.dias}, ${treino.horario}, ${ondeTreinamos()}. Todos os treinos são gratuitos. ${treino.chegada}`,
     confirmar: !treino.confirmado,
   },
   {
@@ -75,7 +73,7 @@ const fasesTreino = [
     </div>
 
     <div class="entrar__acoes" data-surge>
-      <Botao href={linkWhatsapp()} icone={whatsappPronto() ? 'whatsapp' : 'raio'} dica={whatsappPronto() ? '(abre o WhatsApp)' : ''}>
+      <Botao {...botaoGrupo()}>
         Venha treinar com a gente
       </Botao>
       <a class="link-forte" href="#agenda">Ver a agenda</a>
@@ -93,6 +91,15 @@ const fasesTreino = [
           ))
         }
       </ol>
+      <div class="treino__especial">
+        <div class="treino__especial-miolo">
+          <Icone nome="raio" tamanho={26} />
+          <div>
+            <h4 class="treino__especial-titulo">Treinos com a seleção</h4>
+            <p>De tempos em tempos, jogadores da seleção brasileira de lacrosse vêm ao Choque para dar treinos especiais.</p>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="duvidas">
@@ -224,6 +231,36 @@ const fasesTreino = [
   .treino__fase span {
     font-size: var(--fs-pequeno);
     color: var(--nevoa);
+  }
+
+  /* Borda chanfrada em duas camadas: a amarela por fora, a escura por dentro */
+  .treino__especial {
+    margin-top: 1.25rem;
+    padding: 2px;
+    background: var(--amarelo);
+    clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%);
+  }
+  .treino__especial-miolo {
+    display: flex;
+    gap: 0.85rem;
+    align-items: flex-start;
+    padding: 1.1rem 1.25rem;
+    background: var(--noite);
+    clip-path: polygon(0 0, calc(100% - 15px) 0, 100% 15px, 100% 100%, 0 100%);
+  }
+  .treino__especial :global(.icone) {
+    flex: none;
+    margin-top: 0.1rem;
+    color: var(--amarelo);
+  }
+  .treino__especial-titulo {
+    font-size: 1.5rem;
+    line-height: 1;
+  }
+  .treino__especial p {
+    margin-top: 0.35rem;
+    font-size: var(--fs-pequeno);
+    color: rgb(241 242 246 / 0.88);
   }
 
   /* ---------- Perguntas frequentes ---------- */

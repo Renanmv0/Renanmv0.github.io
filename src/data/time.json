@@ -4,26 +4,26 @@
   "nome": "Choque Lacrosse",
   "cidade": "São Paulo",
   "estado": "SP",
-  "fundacao": { "ano": 2023, "confirmado": false, "_leia": "O contador de anos de time é calculado sozinho a partir deste ano." },
+  "fundacao": { "ano": 2024, "mes": 10, "confirmado": true, "_leia": "O contador de anos de time é calculado sozinho a partir deste mês (1 a 12) e ano." },
 
-  "descricaoSeo": "Choque Lacrosse, time de lacrosse de São Paulo. Treinos abertos para iniciantes: ensinamos do zero e emprestamos o equipamento. Venha treinar com a gente.",
+  "descricaoSeo": "Choque Lacrosse, time de lacrosse de São Paulo. Treinos gratuitos aos domingos, abertos a iniciantes: ensinamos do zero e emprestamos o equipamento.",
 
   "contato": {
-    "_leia": "whatsapp: só números, com 55 + DDD (ex.: 5511987654321). instagram: o usuário sem @ (ex.: choquelacrosse).",
-    "whatsapp": "[PREENCHER]",
-    "mensagemWhatsapp": "Oi! Vi o site do Choque e quero fazer uma aula experimental de lacrosse.",
-    "mensagemPatrocinio": "Oi! Vi o site do Choque e quero conversar sobre patrocínio.",
-    "instagram": "[PREENCHER]",
-    "email": "[PREENCHER]"
+    "_leia": "grupoWhatsapp: link do grupo do WhatsApp, começando com https://. instagram: o usuário sem @ (ex.: choquelacrosse). email: deixe \"\" para não aparecer no site.",
+    "grupoWhatsapp": "https://paa.ge/choquelacrosse?share_link=link_01M0JPD4SQDBKNXXTPD15AZAE0",
+    "instagram": "choquelacrosse",
+    "email": ""
   },
 
   "treino": {
-    "local": "Centro Esportivo Tietê",
-    "endereco": "",
-    "linkMapa": "https://www.google.com/maps/search/?api=1&query=Centro+Esportivo+Tiet%C3%AA+S%C3%A3o+Paulo",
-    "dias": "Sábados ou domingos",
-    "horario": "9h às 12h ou 15h às 18h",
-    "confirmado": false,
+    "_leia": "locais: um bloco por local, na ordem em que aparecem. O site escreve \"no\" antes do nome (\"no Parque Ibirapuera\"). linkMapa: link do Google Maps para o botão de como chegar.",
+    "dias": "Domingos",
+    "horario": "9h às 11h",
+    "confirmado": true,
+    "locais": [
+      { "nome": "Centro Esportivo Tietê", "endereco": "", "linkMapa": "https://www.google.com/maps/search/?api=1&query=Centro+Esportivo+Tiet%C3%AA+S%C3%A3o+Paulo" },
+      { "nome": "Parque Ibirapuera", "endereco": "", "linkMapa": "https://www.google.com/maps/search/?api=1&query=Parque+Ibirapuera+S%C3%A3o+Paulo" }
+    ],
     "chegada": "Chegue 15 minutos antes para aquecer.",
     "levar": ["Roupa de treino", "Chuteira ou tênis", "Garrafa de água", "Protetor solar"],
     "emprestamos": ["Taco", "Luvas", "Capacete"]
@@ -31,12 +31,12 @@
 
   "numeros": [
     { "valor": 14, "rotulo": "atletas no elenco", "confirmado": false },
-    { "valor": 6, "rotulo": "jogos disputados", "confirmado": false }
+    { "valor": 0, "rotulo": "reais para treinar", "confirmado": true }
   ],
 
   "historia": [
-    "O Choque nasceu de um grupo de amigos que queria jogar lacrosse em São Paulo, mesmo com pouco equipamento e muitas perguntas sobre que esporte era aquele. Em [ANO DE FUNDAÇÃO], vieram os primeiros treinos.",
-    "Hoje o time treina no Centro Esportivo Tietê, disputa jogos e recebe quem nunca pegou num taco. A missão continua a mesma: espalhar o lacrosse pelo Brasil e mostrar a garra brasileira em campo."
+    "O Choque nasceu de um grupo de amigos que queria jogar lacrosse em São Paulo, mesmo com pouco equipamento e muitas perguntas sobre que esporte era aquele. Em outubro de 2024, vieram os primeiros treinos.",
+    "Hoje o time treina aos domingos, no Centro Esportivo Tietê ou no Parque Ibirapuera, e recebe quem nunca pegou num taco. A missão continua a mesma: espalhar o lacrosse pelo Brasil e mostrar a garra brasileira em campo."
   ],
 
   "valores": [

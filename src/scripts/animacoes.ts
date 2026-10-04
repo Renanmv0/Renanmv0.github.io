@@ -57,9 +57,12 @@ function prepararContadores(animar: boolean) {
   const contadores = $$('[data-contador]');
   const alvos = new Map<HTMLElement, number>();
   contadores.forEach((el) => {
-    // anos de time: recalculado no navegador para nunca ficar desatualizado
-    const fundacao = Number(el.dataset.fundacao);
-    const alvo = fundacao ? Math.max(1, new Date().getFullYear() - fundacao) : Number(el.dataset.contador);
+    // anos de time ("2024-10"): recalculado no navegador para nunca ficar desatualizado
+    const [ano, mes = 1] = (el.dataset.fundacao ?? '').split('-').map(Number);
+    const hoje = new Date();
+    const alvo = ano
+      ? Math.max(1, hoje.getFullYear() - ano - (hoje.getMonth() + 1 < mes ? 1 : 0))
+      : Number(el.dataset.contador);
     const leitor = el.nextElementSibling;
     if (leitor?.classList.contains('sr-only')) leitor.textContent = String(alvo);
     el.textContent = String(alvo);

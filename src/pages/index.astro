@@ -13,6 +13,7 @@ import Resultados from '../components/Resultados.astro';
 import Galeria from '../components/Galeria.astro';
 import Apoie from '../components/Apoie.astro';
 import Rodape from '../components/Rodape.astro';
+import { temResultados } from '../lib/dados';
 ---
 
 <Base>
@@ -24,8 +25,9 @@ import Rodape from '../components/Rodape.astro';
     <ComoEntrar />
     <Agenda />
     <Elenco />
-    <Resultados />
-    <Galeria />
+    {temResultados && <Resultados />}
+    {/* sem o placar, a galeria troca de fundo para continuar a alternância entre as seções */}
+    <Galeria fundo={temResultados ? 'noite' : 'noite-2'} />
     <Apoie />
   </main>
   <Rodape />

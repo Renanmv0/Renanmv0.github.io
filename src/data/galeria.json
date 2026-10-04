@@ -3,7 +3,7 @@
   "itens": [
     { "tipo": "foto", "arquivo": "fotos/time.jpg", "legenda": "Elenco do Choque reunido no Centro Esportivo Tietê" },
     { "tipo": "foto", "arquivo": "fotos/treino.jpg", "legenda": "Coletivo de treino no gramado" },
-    { "tipo": "foto", "arquivo": "", "legenda": "[FOTO DE JOGO]" },
+    { "tipo": "foto", "arquivo": "", "legenda": "[FOTO DE TREINO ESPECIAL]" },
     { "tipo": "video", "youtubeId": "", "legenda": "[VÍDEO DE MELHORES MOMENTOS]" },
     { "tipo": "foto", "arquivo": "", "legenda": "[FOTO DE COMEMORAÇÃO]" },
     { "tipo": "foto", "arquivo": "", "legenda": "[FOTO DE TREINO]" }

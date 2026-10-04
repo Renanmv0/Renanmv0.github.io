@@ -1,15 +1,25 @@
 ---
-// "Quem veste a camisa": cards do elenco (src/data/elenco.json).
-// Foto do atleta em src/assets/elenco/; sem foto, aparece a silhueta do capacete.
+// "Quem veste a camisa": membros fixos do time (src/data/elenco.json).
+// Foto em src/assets/elenco/; sem foto, aparece a silhueta do capacete.
+// Sem número de camisa, o card mostra as iniciais no lugar.
 import { Picture } from 'astro:assets';
 import Corte from './Corte.astro';
 import Ph from './Ph.astro';
 import Ilustracao from './Ilustracao.astro';
-import { elenco, POSICOES, ehPlaceholder } from '../lib/dados';
+import { elenco, ehPlaceholder } from '../lib/dados';
 import { imagem } from '../lib/imagens';
 
-const atletas = elenco.map((a) => ({ ...a, imagem: imagem(a.foto, 'elenco') }));
-const contagem = (n: number) => `${n} ${n === 1 ? 'atleta' : 'atletas'}`;
+// "Isabela de Genaro" -> "IG" (primeiro e último nome)
+const iniciais = (nome: string) => {
+  const partes = nome.trim().split(/\s+/).filter(Boolean);
+  if (partes.length === 0) return '';
+  return `${partes[0][0]}${partes.length > 1 ? partes.at(-1)![0] : ''}`.toUpperCase();
+};
+const membros = elenco.map((m) => ({
+  ...m,
+  imagem: imagem(m.foto, 'elenco'),
+  marca: m.numero !== null ? String(m.numero) : ehPlaceholder(m.nome) ? '' : iniciais(m.nome),
+}));
 ---
 
 <section class="secao elenco" id="elenco" aria-labelledby="elenco-titulo">
@@ -22,65 +32,59 @@ const contagem = (n: number) => `${n} ${n === 1 ? 'atleta' : 'atletas'}`;
         <span class="linha">Quem veste</span>
         <span class="linha estencil">a camisa</span>
       </h2>
-
-      <div class="filtros" role="group" aria-label="Filtrar elenco por posição" data-filtros hidden>
-        <button type="button" class="filtro" aria-pressed="true" data-filtro="todos">Todos</button>
-        {
-          POSICOES.map((p) => (
-            <button type="button" class="filtro" aria-pressed="false" data-filtro={p}>
-              {p}
-            </button>
-          ))
-        }
-      </div>
+      <p class="elenco__intro" data-surge>Fundadores e administradores: os membros fixos que organizam o Choque.</p>
     </div>
-    <p class="sr-only" aria-live="polite" data-filtro-contagem>{contagem(atletas.length)}</p>
 
-    <ul class="atletas" role="list">
+    <ul class="membros" role="list">
       {
-        atletas.map((a) => (
-          <li class:list={['atleta', { 'atleta--capitao': a.capitao }]} data-posicao={a.posicao} data-revela>
+        membros.map((m) => (
+          <li class="membro" data-revela>
             <span class="varredura" aria-hidden="true" />
-            <article class="atleta__card">
-              <div class="atleta__foto">
-                <span class="atleta__numero atleta__numero--contorno tabular" aria-hidden="true">
-                  {a.numero}
-                </span>
-                <span class="atleta__numero atleta__numero--cheio tabular" aria-hidden="true">
-                  {a.numero}
-                </span>
-                {a.imagem ? (
+            <article class="membro__card">
+              <div class="membro__foto">
+                {m.marca && (
+                  <>
+                    <span class="membro__marca membro__marca--contorno tabular" aria-hidden="true">
+                      {m.marca}
+                    </span>
+                    <span class="membro__marca membro__marca--cheia tabular" aria-hidden="true">
+                      {m.marca}
+                    </span>
+                  </>
+                )}
+                {m.imagem ? (
                   <Picture
-                    src={a.imagem}
+                    src={m.imagem}
                     formats={['avif', 'webp']}
                     widths={[240, 360, 520]}
-                    sizes="(min-width: 1024px) 22vw, 46vw"
-                    alt={ehPlaceholder(a.nome) ? 'Foto do atleta' : `Foto de ${a.nome}`}
-                    class="atleta__img"
+                    sizes="(min-width: 1024px) 28vw, (min-width: 700px) 30vw, 46vw"
+                    alt={ehPlaceholder(m.nome) ? 'Foto do membro do time' : `Foto de ${m.nome}`}
+                    class="membro__img"
                   />
                 ) : (
-                  <div class="atleta__silhueta">
+                  <div class="membro__silhueta">
                     <Ilustracao nome="capacete" />
-                    <span class="ph">[FOTO DO ATLETA]</span>
+                    <span class="ph">[FOTO]</span>
                   </div>
                 )}
-                {a.capitao && (
-                  <span class="atleta__capitao" title="Capitão">
-                    C<span class="sr-only">apitão</span>
+                {m.capitao && (
+                  <span class="membro__capitao" aria-hidden="true">
+                    C
                   </span>
                 )}
               </div>
-              <div class="atleta__dados">
-                <h3 class="atleta__nome">
-                  <Ph texto={a.nome} />
+              <div class="membro__dados">
+                <h3 class="membro__nome">
+                  <Ph texto={m.nome} />
                 </h3>
-                <p class="atleta__linha">
-                  <span class="sr-only">Número {a.numero}, posição: </span>
-                  <span class="etiqueta">{a.posicao}</span>
-                  <span class="atleta__camisa tabular" aria-hidden="true">
-                    #{a.numero}
-                  </span>
+                <p class="membro__funcao">
+                  <Ph texto={m.funcao} />
                 </p>
+                {m.detalhe && (
+                  <p class="membro__detalhe">
+                    <Ph texto={m.detalhe} />
+                  </p>
+                )}
               </div>
             </article>
           </li>
@@ -112,63 +116,30 @@ const contagem = (n: number) => `${n} ${n === 1 ? 'atleta' : 'atletas'}`;
   }
   .elenco__cabeca {
     display: grid;
-    gap: 2rem;
+    gap: 1.25rem;
     margin-bottom: clamp(2.5rem, 6vw, 4rem);
   }
-
-  /* ---------- Filtros por posição ---------- */
-  .filtros {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-  }
-  .filtros[hidden] {
-    display: none;
-  }
-  .filtro {
-    min-height: 44px;
-    padding: 0.5rem 1rem 0.45rem;
-    border: 2px solid var(--noite-3);
-    font-family: var(--t-titulo);
-    font-weight: 800;
-    font-size: 1.15rem;
-    line-height: 1;
-    text-transform: uppercase;
-    letter-spacing: 0.03em;
-    color: var(--giz);
-    transition:
-      background-color var(--rapido) ease,
-      border-color var(--rapido) ease,
-      color var(--rapido) ease;
-  }
-  .filtro:hover {
-    border-color: var(--amarelo);
-  }
-  .filtro[aria-pressed='true'] {
-    background: var(--amarelo);
-    border-color: var(--amarelo);
-    color: var(--noite);
+  .elenco__intro {
+    max-width: 38ch;
+    color: var(--nevoa);
   }
 
   /* ---------- Cards ---------- */
-  .atletas {
+  .membros {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1.5rem 0.9rem;
+    gap: 1.75rem 0.9rem;
     list-style: none;
     padding: 0;
   }
-  .atleta {
+  .membro {
     position: relative;
   }
-  .atleta[hidden] {
-    display: none;
-  }
-  .atleta__card {
+  .membro__card {
     display: grid;
     gap: 0.75rem;
   }
-  .atleta__foto {
+  .membro__foto {
     position: relative;
     aspect-ratio: 3 / 4;
     overflow: hidden;
@@ -177,34 +148,35 @@ const contagem = (n: number) => `${n} ${n === 1 ? 'atleta' : 'atletas'}`;
       var(--noite-2);
     clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 0 100%);
   }
-  .atleta__numero {
+  /* Número da camisa (ou iniciais) gigante no canto do card */
+  .membro__marca {
     position: absolute;
     right: -0.04em;
     bottom: -0.12em;
     z-index: 0;
     font-family: var(--t-numero);
     font-weight: 900;
-    font-size: clamp(6rem, 30vw, 10rem);
+    font-size: clamp(5.5rem, 27vw, 9rem);
     line-height: 1;
     pointer-events: none;
     transition: opacity var(--medio) ease;
   }
-  .atleta__numero--contorno {
+  .membro__marca--contorno {
     color: transparent;
     -webkit-text-stroke: 2px rgb(255 224 46 / 0.55);
   }
-  .atleta__numero--cheio {
+  .membro__marca--cheia {
     color: var(--amarelo);
     opacity: 0;
   }
-  .atleta__foto :global(.atleta__img) {
+  .membro__foto :global(.membro__img) {
     position: relative;
     z-index: 1;
     width: 100%;
     height: 100%;
     object-fit: cover;
   }
-  .atleta__silhueta {
+  .membro__silhueta {
     position: relative;
     z-index: 1;
     display: grid;
@@ -215,15 +187,15 @@ const contagem = (n: number) => `${n} ${n === 1 ? 'atleta' : 'atletas'}`;
     padding: 1rem;
     text-align: center;
   }
-  .atleta__silhueta :global(svg) {
+  .membro__silhueta :global(svg) {
     width: 62%;
     opacity: 0.5;
   }
-  .atleta__silhueta .ph {
+  .membro__silhueta .ph {
     font-size: 0.8rem;
     font-weight: 700;
   }
-  .atleta__capitao {
+  .membro__capitao {
     position: absolute;
     top: 0.6rem;
     left: 0.6rem;
@@ -239,35 +211,39 @@ const contagem = (n: number) => `${n} ${n === 1 ? 'atleta' : 'atletas'}`;
     font-size: 1.4rem;
     line-height: 1;
   }
-  .atleta__nome {
+  .membro__nome {
     font-size: clamp(1.35rem, 4.6vw, 1.9rem);
     line-height: 0.95;
     overflow-wrap: anywhere;
   }
-  .atleta__linha {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    margin-top: 0.4rem;
-  }
-  .atleta__camisa {
+  .membro__funcao {
+    margin-top: 0.45rem;
     font-family: var(--t-titulo);
     font-weight: 800;
-    font-size: 1.1rem;
+    font-size: 1.05rem;
+    line-height: 1.1;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--amarelo);
+  }
+  .membro__detalhe {
+    margin-top: 0.35rem;
+    font-size: var(--fs-pequeno);
+    line-height: 1.4;
     color: var(--nevoa);
   }
 
   /* Hover/foco: o card leva um "choque" e o número acende */
   @media (hover: hover) {
-    .atleta:hover .atleta__numero--cheio {
+    .membro:hover .membro__marca--cheia {
       opacity: 1;
     }
-    .atleta:hover .atleta__numero--contorno {
+    .membro:hover .membro__marca--contorno {
       opacity: 0;
     }
   }
   @media (hover: hover) and (prefers-reduced-motion: no-preference) {
-    .atleta:hover .atleta__card {
+    .membro:hover .membro__card {
       animation: choque 0.36s steps(1, end);
     }
   }
@@ -281,12 +257,12 @@ const contagem = (n: number) => `${n} ${n === 1 ? 'atleta' : 'atletas'}`;
   }
 
   @media (min-width: 700px) {
-    .atletas {
+    .membros {
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 2rem 1.25rem;
+      gap: 2.25rem 1.25rem;
     }
-    .atleta__numero {
-      font-size: clamp(7rem, 17vw, 12rem);
+    .membro__marca {
+      font-size: clamp(6.5rem, 16vw, 11rem);
     }
   }
   @media (min-width: 1024px) {
@@ -294,56 +270,34 @@ const contagem = (n: number) => `${n} ${n === 1 ? 'atleta' : 'atletas'}`;
       justify-items: end;
       text-align: right;
     }
-    .atletas {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+    .membros {
+      gap: 2.5rem 2rem;
     }
-    /* escalação "em linha", com colunas desencontradas */
-    .atleta:nth-child(4n + 2),
-    .atleta:nth-child(4n + 4) {
+    /* escalação "em linha": a coluna do meio desce um pouco */
+    .membro:nth-child(3n + 2) {
       margin-top: 3.5rem;
     }
-    .atleta__numero {
-      font-size: clamp(7rem, 11vw, 12rem);
+    .membro__marca {
+      font-size: clamp(8rem, 12vw, 13rem);
+    }
+  }
+  @media (min-width: 1200px) {
+    /* todos lado a lado, alternando a altura */
+    .membros {
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 2.5rem 1.25rem;
+    }
+    .membro:nth-child(3n + 2) {
+      margin-top: 0;
+    }
+    .membro:nth-child(even) {
+      margin-top: 3rem;
+    }
+    .membro__marca {
+      font-size: clamp(6rem, 7.5vw, 8rem);
+    }
+    .membro__nome {
+      font-size: 1.6rem;
     }
   }
 </style>
-
-<script>
-  import { ScrollTrigger } from 'gsap/ScrollTrigger';
-  // Filtro por posição (sem JavaScript, o elenco inteiro aparece)
-  document.querySelectorAll<HTMLElement>('[data-filtros]').forEach((grupo) => {
-    const secao = grupo.closest('section')!;
-    const atletas = Array.from(secao.querySelectorAll<HTMLElement>('[data-posicao]'));
-    const anuncio = secao.querySelector<HTMLElement>('[data-filtro-contagem]');
-    const botoes = Array.from(grupo.querySelectorAll<HTMLButtonElement>('[data-filtro]'));
-    grupo.hidden = false;
-
-    function aplicar(botao: HTMLButtonElement) {
-      const filtro = botao.dataset.filtro;
-      botoes.forEach((b) => b.setAttribute('aria-pressed', String(b === botao)));
-      let visiveis = 0;
-      atletas.forEach((a) => {
-        const mostrar = filtro === 'todos' || a.dataset.posicao === filtro;
-        a.hidden = !mostrar;
-        if (mostrar) visiveis++;
-      });
-      if (anuncio) anuncio.textContent = `${visiveis} ${visiveis === 1 ? 'atleta' : 'atletas'}`;
-      ScrollTrigger.refresh(); // a altura da página mudou
-    }
-
-    botoes.forEach((botao) =>
-      botao.addEventListener('click', () => {
-        aplicar(botao);
-        const url = new URL(location.href);
-        if (botao.dataset.filtro === 'todos') url.searchParams.delete('posicao');
-        else url.searchParams.set('posicao', botao.dataset.filtro ?? '');
-        history.replaceState(null, '', url);
-      }),
-    );
-
-    // Abre já filtrado se o link tiver ?posicao=...
-    const inicial = new URL(location.href).searchParams.get('posicao');
-    const botaoInicial = botoes.find((b) => b.dataset.filtro === inicial);
-    if (botaoInicial) aplicar(botaoInicial);
-  });
-</script>

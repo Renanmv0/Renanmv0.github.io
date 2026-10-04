@@ -9,6 +9,11 @@ import VideoLeve from './VideoLeve.astro';
 import { galeria } from '../lib/dados';
 import { imagem } from '../lib/imagens';
 
+interface Props {
+  fundo?: 'noite' | 'noite-2';
+}
+const { fundo = 'noite' } = Astro.props;
+
 const itens = await Promise.all(
   galeria.map(async (item) => {
     if (item.tipo !== 'foto') return { ...item, img: undefined, grande: undefined };
@@ -21,8 +26,8 @@ const itens = await Promise.all(
 );
 ---
 
-<section class="secao galeria" id="galeria" aria-labelledby="galeria-titulo">
-  <Corte posicao="topo" cor="var(--noite)" />
+<section class:list={['secao', 'galeria', `galeria--${fundo}`]} id="galeria" aria-labelledby="galeria-titulo">
+  <Corte posicao="topo" cor={`var(--${fundo})`} />
 
   <div class="container">
     <h2 class="galeria__titulo" id="galeria-titulo">
@@ -91,6 +96,12 @@ const itens = await Promise.all(
 <style>
   .galeria {
     padding-bottom: calc(var(--secao) + var(--corte));
+  }
+  .galeria--noite-2 {
+    background: var(--noite-2);
+  }
+  .galeria--noite-2 .foto {
+    background: var(--noite);
   }
 
   /* ---------- Título em faixa (corre com a rolagem) ---------- */
