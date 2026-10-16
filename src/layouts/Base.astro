@@ -78,7 +78,7 @@ const dadosEstruturados = {
     <Font cssVariable="--fonte-texto" preload={[{ weight: 400 }]} />
     <Font cssVariable="--fonte-numero" />
 
-    <script type="application/ld+json" set:html={JSON.stringify(dadosEstruturados)} />
+    <script type="application/ld+json" set:html={JSON.stringify(dadosEstruturados).replaceAll('<', '\\u003c')} />
 
     <!-- Marca que o JavaScript está ativo (sem JS, todo o conteúdo aparece parado) -->
     <script is:inline>document.documentElement.classList.add('js');</script>

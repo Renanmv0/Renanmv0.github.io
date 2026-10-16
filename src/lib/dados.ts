@@ -13,6 +13,12 @@ import perguntasJson from '../data/perguntas.json';
 
 const texto = z.string();
 const data = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'use o formato AAAA-MM-DD, ex.: 2026-11-07');
+// Links externos só com https:// (evita links "javascript:" ou digitados pela metade)
+const link = z.string().regex(/^https:\/\/\S+$/, 'use o link completo, começando com https://');
+const linkOpcional = z.union([z.literal(''), link]).default('');
+const youtubeId = z
+  .string()
+  .regex(/^([\w-]{11})?$/, 'use só o código de 11 caracteres que vem depois de v= no link do YouTube (ou "")');
 const hora = z.string().regex(/^(\d{2}:\d{2})?$/, 'use o formato HH:MM, ex.: 09:30 (ou deixe "")');
 
 const esquemaTime = z.object({
@@ -35,7 +41,7 @@ const esquemaTime = z.object({
     horario: texto,
     confirmado: z.boolean(),
     locais: z
-      .array(z.object({ nome: texto, endereco: texto.default(''), linkMapa: texto }))
+      .array(z.object({ nome: texto, endereco: texto.default(''), linkMapa: link }))
       .min(1, 'informe pelo menos um local de treino'),
     chegada: texto,
     levar: z.array(texto),
@@ -44,7 +50,7 @@ const esquemaTime = z.object({
   numeros: z.array(z.object({ valor: z.number().min(0), rotulo: texto, confirmado: z.boolean() })),
   historia: z.array(texto).min(1),
   valores: z.array(z.object({ titulo: texto, texto })),
-  video: z.object({ youtubeId: texto, titulo: texto }),
+  video: z.object({ youtubeId, titulo: texto }),
 });
 
 const esquemaElenco = z.object({
@@ -90,13 +96,13 @@ const esquemaGaleria = z.object({
   itens: z.array(
     z.discriminatedUnion('tipo', [
       z.object({ tipo: z.literal('foto'), arquivo: texto, legenda: texto }),
-      z.object({ tipo: z.literal('video'), youtubeId: texto, legenda: texto }),
+      z.object({ tipo: z.literal('video'), youtubeId, legenda: texto }),
     ]),
   ),
 });
 
 const esquemaPatrocinadores = z.object({
-  patrocinadores: z.array(z.object({ nome: texto, logo: texto.default(''), site: texto.default('') })),
+  patrocinadores: z.array(z.object({ nome: texto, logo: texto.default(''), site: linkOpcional })),
   beneficios: z.array(texto),
 });
 
